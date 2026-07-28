@@ -41,7 +41,7 @@ CODECS = {
     # aptX: fixed 4:1, native ffmpeg codec, stereo. Matches the live-preferred link.
     "aptx": {
         "enc": ["-f", "aptx", "-"],
-        "dec_infmt": ["-f", "aptx"],
+        "dec_infmt": ["-f", "aptx", "-ar", "{sr}", "-ac", "{ch}"],
         "note": "aptX 4:1, the codec the live Pi link negotiates/prefers",
     },
     # Low-quality SBC: worst-case robustness variant. bitrate knob emulates a low
@@ -85,7 +85,8 @@ def codec_roundtrip(pcm, sr, spec, ch=2):
     enc = [c.format(sr=sr) for c in spec["enc"]]
     stream = _run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(sr),
                    "-ac", str(ch), "-i", "-"] + enc, in_bytes=b)
-    dec = _run(["ffmpeg", "-v", "error"] + spec["dec_infmt"] +
+    dec_infmt = [c.format(sr=sr, ch=ch) for c in spec["dec_infmt"]]
+    dec = _run(["ffmpeg", "-v", "error"] + dec_infmt +
                ["-i", "-", "-ar", str(sr), "-ac", str(ch),
                 "-f", "f32le", "-acodec", "pcm_f32le", "-"], in_bytes=stream)
     return np.frombuffer(dec, dtype="<f4").astype(np.float32).reshape(-1, ch)
@@ -154,7 +155,11 @@ def selftest(sr=44100):
             # degradation after re-alignment (lower = better preserved timing)
             resid = float(np.abs(aligned - pcm).mean())
             corr = float(np.corrcoef(aligned.mean(1), pcm.mean(1))[0, 1])
-            print(f"  {name:9s} OK  delay={d:4d} smp ({d/sr*1000:6.2f} ms)  "
+            quality_ok = corr >= 0.9 and resid <= 0.1
+            ok &= quality_ok
+            status = "OK" if quality_ok else "FAIL_QUALITY"
+            print(f"  {name:9s} {status}  delay={d:4d} smp "
+                  f"({d/sr*1000:6.2f} ms)  "
                   f"resid={resid:.4f}  corr={corr:.4f}  [{spec['note']}]")
         except Exception as e:
             ok = False
