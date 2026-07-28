@@ -90,7 +90,10 @@ def merge(variants, out_mel, out_roll, provenance_path, hash_inputs=False):
                  "roll": _file_identity(roll_path, hash_inputs)}
                 for name, mel_path, roll_path in variants
             ],
-            "outputs": {"mel": out_mel, "roll": out_roll},
+            "outputs": {
+                "mel": os.path.abspath(os.fspath(out_mel)),
+                "roll": os.path.abspath(os.fspath(out_roll)),
+            },
         }
         with open(provenance_path, "w", encoding="utf-8") as stream:
             json.dump(provenance, stream, indent=2)
