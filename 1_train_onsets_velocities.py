@@ -144,11 +144,16 @@ class ConfDef:
     ONSET_POSITIVES_WEIGHT: float = 8.0
     VEL_LOSS_LAMBDA: float = 10.0
     TRAINABLE_ONSETS: bool = True
+    TRAINABLE_COMPONENTS: str = "all"
+    ENABLE_FRAME_HEAD: bool = False
+    FRAME_LOSS_LAMBDA: float = 1.0
+    FRAME_POSITIVES_WEIGHT: float = 1.0
     # decoder
     DECODER_GAUSS_STD: float = 1
     DECODER_GAUSS_KSIZE: int = 11
     # training loop
     NUM_EPOCHS: int = 10
+    MAX_STEPS: Optional[int] = None
     TRAIN_LOG_EVERY: int = 10
     XV_EVERY: int = 1000
     XV_CHUNK_SIZE: float = 600
@@ -241,9 +246,11 @@ if __name__ == "__main__":
         conv1x1head=CONF.CONV1X1,
         bn_momentum=CONF.BATCH_NORM,
         leaky_relu_slope=CONF.LEAKY_RELU_SLOPE,
-        dropout_drop_p=CONF.DROPOUT).to(CONF.DEVICE)
+        dropout_drop_p=CONF.DROPOUT,
+        enable_frame_head=CONF.ENABLE_FRAME_HEAD).to(CONF.DEVICE)
     if CONF.SNAPSHOT_INPATH is not None:
-        load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=False)
+        load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=False,
+                   strict=not CONF.ENABLE_FRAME_HEAD)
     model_saver = ModelSaver(
         model, MODEL_SNAPSHOT_OUTDIR,
         log_fn=lambda msg: txt_logger.loj("SAVED_MODEL", msg))
@@ -260,10 +267,26 @@ if __name__ == "__main__":
         [CONF.ONSET_POSITIVES_WEIGHT]).to(CONF.DEVICE)
     ons_loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=ons_pos_weights)
     vel_loss_fn = MaskedBCEWithLogitsLoss()
+    frm_loss_fn = None
+    if CONF.ENABLE_FRAME_HEAD:
+        frm_pos_weights = torch.FloatTensor(
+            [CONF.FRAME_POSITIVES_WEIGHT]).to(CONF.DEVICE)
+        frm_loss_fn = torch.nn.BCEWithLogitsLoss(
+            pos_weight=frm_pos_weights)
 
     # optimizer
-    trainable_params = model.parameters() if CONF.TRAINABLE_ONSETS else \
-        model.velocity_stage.parameters()
+    if CONF.TRAINABLE_COMPONENTS == "all":
+        trainable_params = model.parameters()
+    elif CONF.TRAINABLE_COMPONENTS == "velocity":
+        trainable_params = model.velocity_stage.parameters()
+    elif CONF.TRAINABLE_COMPONENTS == "frame":
+        if model.frame_stage is None:
+            raise ValueError("frame mode requires ENABLE_FRAME_HEAD=True")
+        trainable_params = model.frame_stage.parameters()
+    else:
+        raise ValueError("TRAINABLE_COMPONENTS must be all, velocity or frame")
+    trainable_onsets = CONF.TRAINABLE_COMPONENTS == "all" and \
+        CONF.TRAINABLE_ONSETS
 
     opt_hpars = {
         "lr_max": CONF.LR_MAX, "lr": CONF.LR_MAX,
@@ -281,7 +304,8 @@ if __name__ == "__main__":
         Convenience wrapper around the DNN to ensure output and input sequences
         have same length.
         """
-        probs, vels = model(x)
+        outputs = model(x)
+        probs, vels = outputs[:2]
         probs = F.pad(torch.sigmoid(probs[-1]), (1, 0))
         vels = F.pad(torch.sigmoid(vels), (1, 0))
         return probs, vels
@@ -363,6 +387,8 @@ if __name__ == "__main__":
     frames_beg, frames_end = maestro_train.FRAMES_RANGE
     for epoch in range(1, CONF.NUM_EPOCHS + 1):
         for i, (logmels, rolls, metas) in enumerate(train_dl):
+            if CONF.MAX_STEPS is not None and global_step > CONF.MAX_STEPS:
+                break
             # ##################################################################
             # # CROSS VALIDATION
             # ##################################################################
@@ -433,7 +459,9 @@ if __name__ == "__main__":
                 logmels = logmels.to(CONF.DEVICE)
                 rolls = rolls[:, :, 1:].to(CONF.DEVICE)
                 onsets = rolls[:, onsets_beg:onsets_end][:, key_beg:key_end]
-                # frames = rolls[:, frames_beg:frames_end][:, key_beg:key_end]
+                if CONF.ENABLE_FRAME_HEAD:
+                    frames_tgt = rolls[:, frames_beg:frames_end][
+                        :, key_beg:key_end].clip(0, 1)
 
                 # ##############################################################
                 double_onsets = onsets.clone()
@@ -456,12 +484,19 @@ if __name__ == "__main__":
 
             # zero the parameter gradients
             opt.zero_grad()
-            onset_stages, velocities = model(logmels, CONF.TRAINABLE_ONSETS)
+            outputs = model(logmels, trainable_onsets)
+            onset_stages, velocities = outputs[:2]
 
             vel_loss = CONF.VEL_LOSS_LAMBDA * vel_loss_fn(
                 velocities, onsets_norm, mask=onsets_clip)
-            loss = vel_loss
-            if CONF.TRAINABLE_ONSETS:
+            loss = vel_loss if CONF.TRAINABLE_COMPONENTS != "frame" else 0
+            if CONF.ENABLE_FRAME_HEAD:
+                frames = outputs[2]
+                frm_loss = CONF.FRAME_LOSS_LAMBDA * frm_loss_fn(
+                    frames, frames_tgt)
+                if CONF.TRAINABLE_COMPONENTS in ("all", "frame"):
+                    loss += frm_loss
+            if trainable_onsets:
                 ons_loss = sum(ons_loss_fn(ons, onsets_clip)
                                for ons in onset_stages) / len(onset_stages)
                 loss += ons_loss
@@ -477,7 +512,9 @@ if __name__ == "__main__":
             #
             if (global_step % CONF.TRAIN_LOG_EVERY) == 0:
                 losses = [vel_loss.item()]
-                if CONF.TRAINABLE_ONSETS:
+                if CONF.ENABLE_FRAME_HEAD:
+                    losses.append(frm_loss.item())
+                if trainable_onsets:
                     losses.append(ons_loss.item())
                 txt_logger.loj("TRAIN",
                                {"epoch": epoch,
@@ -488,3 +525,6 @@ if __name__ == "__main__":
                                 "LR": opt.get_lr()})
                 #
             global_step += 1
+        if CONF.MAX_STEPS is not None and global_step > CONF.MAX_STEPS:
+            break
+    model_saver(f"final_step={global_step - 1}")

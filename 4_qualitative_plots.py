@@ -262,7 +262,7 @@ if __name__ == "__main__":
         Convenience wrapper around the DNN to ensure output and input sequences
         have same length.
         """
-        probs, vels = model(x)
+        probs, vels = model(x)[:2]
         probs = F.pad(torch.sigmoid(probs[-1]), (1, 0))
         vels = F.pad(torch.sigmoid(vels), (1, 0))
         return probs, vels

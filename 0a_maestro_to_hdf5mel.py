@@ -18,6 +18,7 @@ can be fully traced to its origins.
 import os
 # For omegaconf
 from dataclasses import dataclass
+from typing import Optional
 #
 from omegaconf import OmegaConf
 import torch
@@ -75,6 +76,7 @@ class ConfDef:
     HDF5_CHUNKLEN_SECONDS: float = 8.0
     DEVICE: str = "cpu"
     IGNORE_MEL: bool = False
+    LIMIT: Optional[int] = None
 
 
 # ##############################################################################
@@ -113,6 +115,10 @@ if __name__ == "__main__":
     all_maestro = MAESTRO_METACLASS(CONF.MAESTRO_INPATH,
                                     splits=MAESTRO_METACLASS.ALL_SPLITS,
                                     years=MAESTRO_METACLASS.ALL_YEARS)
+    if CONF.LIMIT is not None:
+        if CONF.LIMIT < 1:
+            raise ValueError("LIMIT must be positive")
+        all_maestro.data = all_maestro.data[:CONF.LIMIT]
 
     if not CONF.IGNORE_MEL:
         # functor to create logmels from wavs

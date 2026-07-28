@@ -102,7 +102,8 @@ class OnsetsAndVelocities(torch.nn.Module):
 
     def __init__(self, in_chans, in_height, out_height, conv1x1head=(200, 200),
                  bn_momentum=0.1, leaky_relu_slope=0.1, dropout_drop_p=0.1,
-                 init_fn=torch.nn.init.kaiming_normal_, se_init_bias=1.0):
+                 init_fn=torch.nn.init.kaiming_normal_, se_init_bias=1.0,
+                 enable_frame_head=False):
         """
         """
         super().__init__()
@@ -155,6 +156,16 @@ class OnsetsAndVelocities(torch.nn.Module):
                     self.VSTAGE_CAM_DILATIONS, self.VSTAGE_CAM_PADDINGS,
                     bn_momentum, leaky_relu_slope, dropout_drop_p),
             SubSpectralNorm(1, out_height, out_height, bn_momentum))
+        self.frame_stage = None
+        if enable_frame_head:
+            self.frame_stage = torch.nn.Sequential(
+                self.get_cam_stage(
+                    vel_in_chans, out_height, conv1x1head,
+                    self.VSTAGE_NUM_CAMS, self.VSTAGE_CAM_HDC_CHANS,
+                    self.VSTAGE_CAM_SE_BOTTLENECK, self.VSTAGE_CAM_KSIZES,
+                    self.VSTAGE_CAM_DILATIONS, self.VSTAGE_CAM_PADDINGS,
+                    bn_momentum, leaky_relu_slope, dropout_drop_p),
+                SubSpectralNorm(1, out_height, out_height, bn_momentum))
 
         # initialize parameters
         if init_fn is not None:
@@ -203,7 +214,8 @@ class OnsetsAndVelocities(torch.nn.Module):
     def forward(self, x, trainable_onsets=True):
         """
         :param x: Logmel batch of shape ``(b, melbins, t)``
-        :returns: ``(x_stages, velocities)``. See ``forward_onsets`` for
+        :returns: ``(x_stages, velocities)`` or, when the optional frame head
+          is enabled, ``(x_stages, velocities, frames)``.
           a description of ``x_stages``. The ``velocities`` tensor has shape
           ``(b, 1, keys, t-1)``, and is the result of processing ``stem_out``
           concatenated with the last ``x_stage`` output.
@@ -218,5 +230,7 @@ class OnsetsAndVelocities(torch.nn.Module):
                                      dim=1)
         #
         velocities = self.velocity_stage(stem_out).squeeze(1)
-        #
+        if self.frame_stage is not None:
+            frames = self.frame_stage(stem_out).squeeze(1)
+            return x_stages, velocities, frames
         return x_stages, velocities

@@ -22,7 +22,11 @@ and the test evaluation is performed only once.
 """
 
 
+import hashlib
+import json
 import os
+import subprocess
+from datetime import datetime, timezone
 # For omegaconf
 from dataclasses import dataclass
 from typing import Optional, List
@@ -108,6 +112,10 @@ class ConfDef:
         "datasets",
         "MAESTROv3_roll_quant=0.024_midivals=128_extendsus=True.h5")
     SNAPSHOT_INPATH: str = MISSING
+    ENABLE_FRAME_HEAD: bool = False
+    RESULTS_JSON: Optional[str] = None
+    RUN_NAME: Optional[str] = None
+    DATASET_VARIANT: Optional[str] = None
     #
     CONV1X1: List[int] = (200, 200)
     LEAKY_RELU_SLOPE: Optional[float] = 0.1
@@ -198,8 +206,10 @@ if __name__ == "__main__":
         conv1x1head=CONF.CONV1X1,
         bn_momentum=0,
         leaky_relu_slope=CONF.LEAKY_RELU_SLOPE,
-        dropout_drop_p=0).to(CONF.DEVICE)
-    load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=True)
+        dropout_drop_p=0,
+        enable_frame_head=CONF.ENABLE_FRAME_HEAD).to(CONF.DEVICE)
+    load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=True,
+               strict=not CONF.ENABLE_FRAME_HEAD)
     # instantiate decoder
     decoder = OnsetVelocityNmsDecoder(
         num_piano_keys, nms_pool_ksize=3,
@@ -215,7 +225,8 @@ if __name__ == "__main__":
         Convenience wrapper around the DNN to ensure output and input sequences
         have same length.
         """
-        probs, vels = model(x)
+        outputs = model(x)
+        probs, vels = outputs[:2]
         probs = F.pad(torch.sigmoid(probs[-1]), (1, 0))
         vels = F.pad(torch.sigmoid(vels), (1, 0))
         return probs, vels
@@ -274,8 +285,7 @@ if __name__ == "__main__":
     ###############
     # TEST
     ###############
-    test_results = []
-    test_results_vel = []
+    test_dataframes = []
     len_test = len(maestro_test)
     for i, (mel, roll, md) in enumerate(maestro_test, 1):
         txt_logger.info(f"[{i}/{len_test} (test set)] {md}")
@@ -287,12 +297,22 @@ if __name__ == "__main__":
             pred_df = decoder(
                 onset_pred, vel_pred, pthresh=min(CONF.SEARCH_THRESHOLDS))
             gt_df = test_gts(md)[0]
-        prf1, prf1_v = threshold_eval_single_file(
-            gt_df, pred_df, SECS_PER_FRAME, key_beg,
-            thresh=best_t, shift_preds=best_s,
-            tol_secs=CONF.TOLERANCE_SECS, tol_vel=CONF.TOLERANCE_VEL)
-        test_results.append((md[0], *prf1))
-        test_results_vel.append((md[0], *prf1_v))
+        test_dataframes.append((md[0], gt_df, pred_df))
+
+    test_by_threshold = {}
+    for thresh in CONF.SEARCH_THRESHOLDS:
+        test_results = []
+        test_results_vel = []
+        for filename, gt_df, pred_df in test_dataframes:
+            prf1, prf1_v = threshold_eval_single_file(
+                gt_df, pred_df, SECS_PER_FRAME, key_beg,
+                thresh=thresh, shift_preds=best_s,
+                tol_secs=CONF.TOLERANCE_SECS, tol_vel=CONF.TOLERANCE_VEL)
+            test_results.append((filename, *prf1))
+            test_results_vel.append((filename, *prf1_v))
+        test_by_threshold[float(thresh)] = (test_results, test_results_vel)
+
+    test_results, test_results_vel = test_by_threshold[float(best_t)]
     #
     test_results_df = pd.DataFrame(
         test_results, columns=["Filename", "P", "R", "F1"])
@@ -313,3 +333,96 @@ if __name__ == "__main__":
         "ONSETS:\n" + str(test_results_df))
     txt_logger.warning(
         "ONSETS+VELOCITIES:\n" + str(test_results_df_vel))
+
+    if CONF.RESULTS_JSON:
+        def mean_prf(rows):
+            return {
+                name: float(value)
+                for name, value in zip(
+                    ("precision", "recall", "f1"),
+                    np.mean([row[1:] for row in rows], axis=0))
+            }
+
+        def file_sha256(path):
+            digest = hashlib.sha256()
+            with open(path, "rb") as stream:
+                while chunk := stream.read(1024 * 1024):
+                    digest.update(chunk)
+            return digest.hexdigest()
+
+        try:
+            git_sha = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], text=True).strip()
+        except (OSError, subprocess.CalledProcessError):
+            git_sha = None
+
+        payload = {
+            "schema_version": 1,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "run_name": CONF.RUN_NAME,
+            "dataset_variant": CONF.DATASET_VARIANT,
+            "git_sha": git_sha,
+            "model": {
+                "path": os.path.abspath(CONF.SNAPSHOT_INPATH),
+                "sha256": file_sha256(CONF.SNAPSHOT_INPATH),
+            },
+            "dataset": {
+                "mel_hdf5": os.path.abspath(CONF.HDF5_MEL_PATH),
+                "roll_hdf5": os.path.abspath(CONF.HDF5_ROLL_PATH),
+                "maestro_root": os.path.abspath(CONF.MAESTRO_PATH),
+                "validation_files": len_xv,
+                "test_files": len_test,
+            },
+            "protocol": {
+                "tolerance_secs": float(CONF.TOLERANCE_SECS),
+                "tolerance_velocity": float(CONF.TOLERANCE_VEL),
+                "validation_take_one_every": int(CONF.XV_TAKE_ONE_EVERY),
+                "searched_shifts": [float(x) for x in CONF.SEARCH_SHIFTS],
+                "selected_shift": float(best_s),
+                "selected_threshold": float(best_t),
+            },
+            "validation": [
+                {
+                    "threshold": float(t),
+                    "shift": float(s),
+                    "onsets": dict(zip(
+                        ("precision", "recall", "f1"),
+                        (float(p), float(r), float(f1)))),
+                    "onsets_velocities": dict(zip(
+                        ("precision", "recall", "f1"),
+                        map(float, xv_summary_vel[(t, s)]))),
+                }
+                for (t, s), (p, r, f1) in xv_summary.items()
+            ],
+            "test": [
+                {
+                    "threshold": threshold,
+                    "shift": float(best_s),
+                    "onsets": mean_prf(rows[0]),
+                    "onsets_velocities": mean_prf(rows[1]),
+                    "files": [
+                        {
+                            "filename": onset_row[0],
+                            "onsets": dict(zip(
+                                ("precision", "recall", "f1"),
+                                map(float, onset_row[1:]))),
+                            "onsets_velocities": dict(zip(
+                                ("precision", "recall", "f1"),
+                                map(float, velocity_row[1:]))),
+                        }
+                        for onset_row, velocity_row in zip(*rows)
+                    ],
+                }
+                for threshold, rows in test_by_threshold.items()
+            ],
+            "config": OmegaConf.to_container(CONF, resolve=True),
+        }
+        result_dir = os.path.dirname(os.path.abspath(CONF.RESULTS_JSON))
+        os.makedirs(result_dir, exist_ok=True)
+        tmp_path = CONF.RESULTS_JSON + ".tmp"
+        with open(tmp_path, "w", encoding="utf-8") as stream:
+            json.dump(payload, stream, indent=2)
+            stream.write("\n")
+        os.replace(tmp_path, CONF.RESULTS_JSON)
+        txt_logger.warning(f"Wrote machine-readable results: "
+                           f"{CONF.RESULTS_JSON}")
