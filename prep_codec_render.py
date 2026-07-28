@@ -26,6 +26,7 @@ Usage:
 """
 import os
 import sys
+import csv
 import json
 import glob
 import subprocess
@@ -183,9 +184,23 @@ def main():
     limit = int(args.get("LIMIT", 0))
     spec = CODECS[variant]
 
-    wavs = sorted(glob.glob(os.path.join(in_root, "**", "*.wav"), recursive=True))
     if limit:
-        wavs = wavs[:limit]
+        csv_paths = glob.glob(os.path.join(in_root, "maestro-v*.csv"))
+        if len(csv_paths) != 1:
+            raise RuntimeError(
+                f"Expected one MAESTRO CSV in {in_root}, got {csv_paths}")
+        with open(csv_paths[0], newline="", encoding="utf-8") as stream:
+            rows = list(csv.DictReader(stream))[:limit]
+        wavs = [os.path.join(in_root, row["audio_filename"])
+                for row in rows]
+        missing = [path for path in wavs if not os.path.isfile(path)]
+        if missing:
+            raise FileNotFoundError(
+                f"{len(missing)} CSV-selected WAVs are missing; "
+                f"first: {missing[0]}")
+    else:
+        wavs = sorted(glob.glob(
+            os.path.join(in_root, "**", "*.wav"), recursive=True))
     print(f"[render] variant={variant} sr={sr} files={len(wavs)} -> {out_root}")
 
     # symlink the non-audio bits (csv/json + all midi) so 0a sees a full root
