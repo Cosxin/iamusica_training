@@ -86,7 +86,7 @@ def codec_roundtrip(pcm, sr, spec, ch=2):
     stream = _run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(sr),
                    "-ac", str(ch), "-i", "-"] + enc, in_bytes=b)
     dec = _run(["ffmpeg", "-v", "error"] + spec["dec_infmt"] +
-               ["-ar", str(sr), "-ac", str(ch), "-i", "-",
+               ["-i", "-", "-ar", str(sr), "-ac", str(ch),
                 "-f", "f32le", "-acodec", "pcm_f32le", "-"], in_bytes=stream)
     return np.frombuffer(dec, dtype="<f4").astype(np.float32).reshape(-1, ch)
 
