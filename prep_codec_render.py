@@ -31,6 +31,7 @@ import json
 import glob
 import subprocess
 import numpy as np
+from scipy.signal import correlate, correlation_lags
 
 
 # ############################################################################
@@ -101,11 +102,15 @@ def measure_delay_samples(clean, coded, sr, max_lag_ms=60.0):
     a = clean.mean(axis=1) if clean.ndim == 2 else clean
     b = coded.mean(axis=1) if coded.ndim == 2 else coded
     n = min(len(a), len(b))
-    a = a[:n].astype(np.float64).copy(); b = b[:n].astype(np.float64).copy()
+    probe_n = min(n, sr * 30)
+    probe_beg = max(0, (n - probe_n) // 2)
+    probe_end = probe_beg + probe_n
+    a = a[probe_beg:probe_end].astype(np.float64).copy()
+    b = b[probe_beg:probe_end].astype(np.float64).copy()
     a -= a.mean(); b -= b.mean()
     max_lag = int(round(max_lag_ms * 1e-3 * sr))
-    corr = np.correlate(b, a, mode="full")
-    lags = np.arange(-(n - 1), n)
+    corr = correlate(b, a, mode="full", method="fft")
+    lags = correlation_lags(len(b), len(a), mode="full")
     keep = np.abs(lags) <= max_lag
     corr, lags = corr[keep], lags[keep]
     return int(lags[np.argmax(corr)])
