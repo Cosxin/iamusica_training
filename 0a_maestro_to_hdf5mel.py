@@ -184,11 +184,15 @@ if __name__ == "__main__":
                         audio_path, CONF.TARGET_SR, mono=True,
                         normalize_wav=True, device=CONF.DEVICE)
                     logmel = logmel_fn(wave).to("cpu").numpy()
+            except Exception as e:
+                # a few codec-rendered WAVs are 0-byte / truncated / corrupt;
+                # skip the whole file rather than aborting the run.
+                print(f"SKIP {path}: {type(e).__name__}: {e}", flush=True)
+                continue
             finally:
                 if temporary_audio is not None and \
                         os.path.exists(temporary_audio):
                     os.remove(temporary_audio)
-            h5mel.append(logmel, metadata)
 
         # compute piano roll and add to corresponding HDF5
         midipath = abspath + MAESTRO_METACLASS.MIDI_EXT
@@ -220,7 +224,9 @@ if __name__ == "__main__":
                 "Logmel and roll have different length?"
         # plt.clf(); plt.imshow(logmel[::-1]); plt.show()
         # plt.clf(); plt.imshow(onset_roll[::-1]); plt.show()
-        #
+        # append mel+roll together so a skipped file never desyncs the two HDF5s
+        if not CONF.IGNORE_MEL:
+            h5mel.append(logmel, metadata)
         h5roll.append(roll, metadata)
         #
         if (i % 5) == 0:
