@@ -74,6 +74,7 @@ python 1_train_onsets_velocities.py \
   XV_HDF5_MEL_PATH="$SMOKE_ROOT/h5-clean/$MEL_NAME" \
   XV_HDF5_ROLL_PATH="$SMOKE_ROOT/h5-clean/$ROLL_NAME" \
   SNAPSHOT_INPATH="$CHECKPOINT" OUTPUT_DIR="$SMOKE_ROOT/train" \
+  ALLOW_PARTIAL_HDF5=true \
   RANDOM_SEED=20260729 TRAIN_BS=1 DATALOADER_WORKERS=0 \
   TRAIN_BATCH_SECS=2 MAX_STEPS=2 XV_EVERY=999 TRAIN_LOG_EVERY=1
 
@@ -87,6 +88,7 @@ python 2_eval_onsets_velocities.py \
   SNAPSHOT_INPATH="$MODEL" OUTPUT_DIR="$SMOKE_ROOT/eval-clean" \
   XV_TAKE_ONE_EVERY=1 'SEARCH_THRESHOLDS=[0.5]' 'SEARCH_SHIFTS=[-0.01]' \
   RESULTS_JSON="$SMOKE_ROOT/log/smoke-clean.json" \
+  ALLOW_PARTIAL_HDF5=true \
   RUN_NAME=codec_smoke DATASET_VARIANT=clean
 
 python -m pytest -q tests/test_codec_finetune.py

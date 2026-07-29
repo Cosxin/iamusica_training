@@ -26,6 +26,7 @@ import hashlib
 import json
 import os
 import subprocess
+from ast import literal_eval
 from datetime import datetime, timezone
 # For omegaconf
 from dataclasses import dataclass
@@ -36,8 +37,10 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import pandas as pd
+import h5py
 #
 from ov_piano import PIANO_MIDI_RANGE, HDF5PathManager
+from ov_piano.utils import IncrementalHDF5
 from ov_piano.utils import load_model
 from ov_piano.logging import ColorLogger
 from ov_piano.data.maestro import MetaMAESTROv1, MetaMAESTROv2, MetaMAESTROv3
@@ -116,6 +119,7 @@ class ConfDef:
     RESULTS_JSON: Optional[str] = None
     RUN_NAME: Optional[str] = None
     DATASET_VARIANT: Optional[str] = None
+    ALLOW_PARTIAL_HDF5: bool = False
     #
     CONV1X1: List[int] = (200, 200)
     LEAKY_RELU_SLOPE: Optional[float] = 0.1
@@ -171,12 +175,27 @@ if __name__ == "__main__":
     metamaestro_xv = METAMAESTRO_CLASS(
         CONF.MAESTRO_PATH, splits=["validation"],
         years=METAMAESTRO_CLASS.ALL_YEARS)
+    if CONF.ALLOW_PARTIAL_HDF5:
+        with h5py.File(CONF.HDF5_MEL_PATH, "r") as handle:
+            available = {
+                literal_eval(item.decode("utf-8"))[0]
+                for item in handle[IncrementalHDF5.METADATA_NAME]
+            }
+        metamaestro_xv.data = [
+            item for item in metamaestro_xv.data
+            if os.path.basename(item[0]) in available
+        ]
     maestro_xv = MelMaestro(
         CONF.HDF5_MEL_PATH, CONF.HDF5_ROLL_PATH,
         *(x[0] for x in metamaestro_xv.data),
         as_torch_tensors=False)
     metamaestro_test = METAMAESTRO_CLASS(
         CONF.MAESTRO_PATH, splits=["test"], years=METAMAESTRO_CLASS.ALL_YEARS)
+    if CONF.ALLOW_PARTIAL_HDF5:
+        metamaestro_test.data = [
+            item for item in metamaestro_test.data
+            if os.path.basename(item[0]) in available
+        ]
     maestro_test = MelMaestro(
         CONF.HDF5_MEL_PATH, CONF.HDF5_ROLL_PATH,
         *(x[0] for x in metamaestro_test.data),

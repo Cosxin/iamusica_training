@@ -16,6 +16,7 @@ It is structured in 3 parts:
 
 import os
 import random
+from ast import literal_eval
 # For omegaconf
 from dataclasses import dataclass
 from typing import Optional, List
@@ -25,9 +26,11 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import pandas as pd
+import h5py
 #
 from ov_piano import PIANO_MIDI_RANGE, HDF5PathManager
-from ov_piano.utils import ModelSaver, load_model, breakpoint_json, set_seed
+from ov_piano.utils import (IncrementalHDF5, ModelSaver, load_model,
+                            breakpoint_json, set_seed)
 from ov_piano.logging import JsonColorLogger
 from ov_piano.data.maestro import MetaMAESTROv1, MetaMAESTROv2, MetaMAESTROv3
 from ov_piano.data.maestro import MelMaestro, MelMaestroChunks
@@ -124,6 +127,7 @@ class ConfDef:
         "MAESTROv3_roll_quant=0.024_midivals=128_extendsus=True.h5")
     XV_HDF5_MEL_PATH: Optional[str] = None
     XV_HDF5_ROLL_PATH: Optional[str] = None
+    ALLOW_PARTIAL_HDF5: bool = False
     SNAPSHOT_INPATH: Optional[str] = None
     # data loader
     TRAIN_BS: int = 40
@@ -210,6 +214,16 @@ if __name__ == "__main__":
     # datasets and dataloaders
     metamaestro_train = METAMAESTRO_CLASS(
         CONF.MAESTRO_PATH, splits=["train"], years=METAMAESTRO_CLASS.ALL_YEARS)
+    if CONF.ALLOW_PARTIAL_HDF5:
+        with h5py.File(CONF.HDF5_MEL_PATH, "r") as handle:
+            available = {
+                literal_eval(item.decode("utf-8"))[0]
+                for item in handle[IncrementalHDF5.METADATA_NAME]
+            }
+        metamaestro_train.data = [
+            item for item in metamaestro_train.data
+            if os.path.basename(item[0]) in available
+        ]
     maestro_train = MelMaestroChunks(
         CONF.HDF5_MEL_PATH, CONF.HDF5_ROLL_PATH,
         CHUNK_LENGTH, CHUNK_STRIDE,
@@ -224,6 +238,17 @@ if __name__ == "__main__":
     metamaestro_xv = METAMAESTRO_CLASS(
         CONF.MAESTRO_PATH, splits=["validation"],
         years=METAMAESTRO_CLASS.ALL_YEARS)
+    if CONF.ALLOW_PARTIAL_HDF5:
+        xv_mel_path = CONF.XV_HDF5_MEL_PATH or CONF.HDF5_MEL_PATH
+        with h5py.File(xv_mel_path, "r") as handle:
+            available = {
+                literal_eval(item.decode("utf-8"))[0]
+                for item in handle[IncrementalHDF5.METADATA_NAME]
+            }
+        metamaestro_xv.data = [
+            item for item in metamaestro_xv.data
+            if os.path.basename(item[0]) in available
+        ]
     # shorten xv set to speed up cross validation times
     txt_logger.loj("WARNING",
                    "shortening xv split for faster crossvalidation!")
