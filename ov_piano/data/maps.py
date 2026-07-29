@@ -390,7 +390,8 @@ class MelMaps(torch.utils.data.Dataset):
         self.basenames = {os.path.basename(x) for x in abspaths}
         #
         self.h5m, self.h5r, metadata, file_idxs = self._init_helper(
-            hdf5_logmels_path, hdf5_pianorolls_path, self.basenames)
+            hdf5_logmels_path, hdf5_pianorolls_path, self.basenames,
+            allow_duplicate_basenames=True)
         # for each chosen idx/metadata, retrieve beg:end range
         self.data = []
         for meta, file_idx in zip(metadata, file_idxs):

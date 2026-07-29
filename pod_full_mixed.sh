@@ -8,12 +8,16 @@ MEL='MAESTROv3_logmel_sr=16000_stft=2048w384h_mel=229(50-8000).h5'
 ROLL='MAESTROv3_roll_quant=0.024_midivals=128_extendsus=True.h5'
 mkdir -p /root/h5-mixed
 
-echo "=== MERGING MEL (clean+aptx+sbc) ==="
-python merge_h5.py "/root/h5-mixed/$MEL" \
-    "/root/h5-clean/$MEL" "/root/h5-aptx/$MEL" "/root/h5-sbc/$MEL"
-echo "=== MERGING ROLL (clean+aptx+sbc) ==="
-python merge_h5.py "/root/h5-mixed/$ROLL" \
-    "/root/h5-clean/$ROLL" "/root/h5-aptx/$ROLL" "/root/h5-sbc/$ROLL"
+if [ ! -f "/root/h5-mixed/$MEL" ]; then
+  echo "=== MERGING MEL (clean+aptx+sbc) ==="
+  python merge_h5.py "/root/h5-mixed/$MEL" \
+      "/root/h5-clean/$MEL" "/root/h5-aptx/$MEL" "/root/h5-sbc/$MEL"
+else echo "=== MEL already merged — skipping ==="; fi
+if [ ! -f "/root/h5-mixed/$ROLL" ]; then
+  echo "=== MERGING ROLL (clean+aptx+sbc) ==="
+  python merge_h5.py "/root/h5-mixed/$ROLL" \
+      "/root/h5-clean/$ROLL" "/root/h5-aptx/$ROLL" "/root/h5-sbc/$ROLL"
+else echo "=== ROLL already merged — skipping ==="; fi
 
 echo "=== LAUNCHING FULL MIXED A+B TRAINING ==="
 CKPT=$(ls assets/*.torch | head -1)
