@@ -57,10 +57,14 @@ CODECS = {
 }
 
 
-def _run(cmd, in_bytes=None):
-    """Run a command, feed optional stdin bytes, return stdout bytes. Raises on error."""
+def _run(cmd, in_bytes=None, timeout=300):
+    """Run a command, feed optional stdin bytes, return stdout bytes. Raises on
+    error, or subprocess.TimeoutExpired if it runs longer than `timeout` s.
+    The timeout guards against a pathological/huge file hanging a pool worker
+    forever (real files finish in seconds); such files are then skipped as
+    errors instead of stalling the whole run."""
     p = subprocess.run(cmd, input=in_bytes, stdout=subprocess.PIPE,
-                       stderr=subprocess.PIPE)
+                       stderr=subprocess.PIPE, timeout=timeout)
     if p.returncode != 0:
         raise RuntimeError(f"cmd failed ({p.returncode}): {' '.join(cmd)}\n"
                            f"{p.stderr.decode('utf-8', 'ignore')[-800:]}")
