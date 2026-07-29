@@ -331,7 +331,7 @@ class MelMaps(torch.utils.data.Dataset):
 
     @classmethod
     def _init_helper(cls, hdf5_logmels_path, hdf5_pianorolls_path,
-                     basenames):
+                     basenames, allow_duplicate_basenames=False):
         """
         Given the paths to the HDF5 files and the desired audio files by their
         basename, opens the HDF5s and checks for consistency before returning.
@@ -360,8 +360,11 @@ class MelMaps(torch.utils.data.Dataset):
                     for t in h5m[IncrementalHDF5.METADATA_NAME]]
         chosen_metadata, chosen_file_idxs = zip(
             *[(x, i) for i, x in enumerate(metadata) if x[0] in basenames])
-        assert len(chosen_file_idxs) == len(basenames), \
-            "HDF5 database is missing files?"
+        found_basenames = {x[0] for x in chosen_metadata}
+        assert found_basenames == basenames, "HDF5 database is missing files?"
+        if not allow_duplicate_basenames:
+            assert len(chosen_file_idxs) == len(basenames), \
+                "HDF5 database contains duplicate files?"
         # return HDF5 file handles and chosen idxs/metadata
         return h5m, h5r, chosen_metadata, chosen_file_idxs
 
@@ -483,7 +486,8 @@ class MelMapsChunks(MelMaps):
         #
         self.basenames = {os.path.basename(x) for x in abspaths}
         self.h5m, self.h5r, self.metadata, file_idxs = self._init_helper(
-            hdf5_logmels_path, hdf5_pianorolls_path, self.basenames)
+            hdf5_logmels_path, hdf5_pianorolls_path, self.basenames,
+            allow_duplicate_basenames=True)
         # cut each chosen file into chunks and gather
         self.data = []
         self.metadata_chunks = []

@@ -122,6 +122,8 @@ class ConfDef:
     HDF5_ROLL_PATH: str = os.path.join(
         "datasets",
         "MAESTROv3_roll_quant=0.024_midivals=128_extendsus=True.h5")
+    XV_HDF5_MEL_PATH: Optional[str] = None
+    XV_HDF5_ROLL_PATH: Optional[str] = None
     SNAPSHOT_INPATH: Optional[str] = None
     # data loader
     TRAIN_BS: int = 40
@@ -228,7 +230,8 @@ if __name__ == "__main__":
     metamaestro_xv.data = metamaestro_xv.data[::5]
     #
     maestro_xv = MelMaestro(
-        CONF.HDF5_MEL_PATH, CONF.HDF5_ROLL_PATH,
+        CONF.XV_HDF5_MEL_PATH or CONF.HDF5_MEL_PATH,
+        CONF.XV_HDF5_ROLL_PATH or CONF.HDF5_ROLL_PATH,
         *(x[0] for x in metamaestro_xv.data),
         as_torch_tensors=False)
     xv_gt_loader = GtLoaderMaestro(maestro_xv, metamaestro_xv)
