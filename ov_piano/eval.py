@@ -229,3 +229,36 @@ def threshold_eval_single_file(
         velocity_tolerance=tol_vel)
     #
     return (prec, rec, f1), (prec_v, rec_v, f1_v)
+
+
+def eval_note_events_with_offsets(
+        gt_df, pred_df, secs_per_frame, pred_key_offset,
+        shift_preds=0, tol_secs=0.05, tol_vel=0.1,
+        offset_ratio=0.2, offset_min_tolerance=0.05):
+    """Evaluate decoded complete notes, including release timing."""
+    if len(pred_df) == 0:
+        return (0, 0, 0), (0, 0, 0)
+    gt_intervals = gt_df[["onset", "offset"]].to_numpy(dtype=float)
+    pred_intervals = np.stack((
+        pred_df["onset_idx"].to_numpy(dtype=float) * secs_per_frame +
+        shift_preds,
+        pred_df["offset_idx"].to_numpy(dtype=float) * secs_per_frame +
+        shift_preds,
+    ), axis=1)
+    gt_keys = gt_df["key"].to_numpy(dtype=float)
+    pred_keys = (
+        pred_df["key"].to_numpy(dtype=float) + float(pred_key_offset))
+    gt_vels = gt_df["vel"].to_numpy(dtype=float)
+    pred_vels = pred_df["vel"].to_numpy(dtype=float)
+    p, r, f1, _ = prf1o(
+        gt_intervals, gt_keys, pred_intervals, pred_keys,
+        onset_tolerance=tol_secs, pitch_tolerance=0.1,
+        offset_ratio=offset_ratio,
+        offset_min_tolerance=offset_min_tolerance)
+    pv, rv, f1v, _ = prf1o_v(
+        gt_intervals, gt_keys, gt_vels,
+        pred_intervals, pred_keys, pred_vels,
+        onset_tolerance=tol_secs, pitch_tolerance=0.1,
+        velocity_tolerance=tol_vel, offset_ratio=offset_ratio,
+        offset_min_tolerance=offset_min_tolerance)
+    return (p, r, f1), (pv, rv, f1v)
