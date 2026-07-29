@@ -7,7 +7,7 @@ RUN_ROOT="${RUN_ROOT:-/root/full_pipeline}"
 
 test -s "$RUN_ROOT/log/stage1-complete.txt"
 cd "$REPO"
-for variant in aptx sbc_low; do
+for variant in aptx; do
   short_name="${variant/_low/}"
   out="$RUN_ROOT/h5-$short_name"
   if [[ -e "$out" ]]; then
