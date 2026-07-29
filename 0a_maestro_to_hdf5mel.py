@@ -16,6 +16,9 @@ can be fully traced to its origins.
 
 
 import os
+import json
+import tempfile
+from datetime import datetime, timezone
 # For omegaconf
 from dataclasses import dataclass
 from typing import Optional
@@ -30,6 +33,7 @@ from ov_piano.utils import IncrementalHDF5
 from ov_piano.utils import TorchWavToLogmel, torch_load_resample_audio
 from ov_piano.data.maestro import MetaMAESTROv1, MetaMAESTROv2, MetaMAESTROv3
 from ov_piano.data.midi import MaestroMidiParser, MidiToPianoRoll
+from prep_codec_render import CODECS, process_file
 
 
 # ##############################################################################
@@ -77,6 +81,8 @@ class ConfDef:
     DEVICE: str = "cpu"
     IGNORE_MEL: bool = False
     LIMIT: Optional[int] = None
+    CODEC_VARIANT: Optional[str] = None
+    CODEC_SR: int = 44_100
 
 
 # ##############################################################################
@@ -145,6 +151,7 @@ if __name__ == "__main__":
         print("Logmels stored into", HDF5_MEL_OUTPATH)
     print("Piano rolls stored into", HDF5_ROLL_OUTPATH)
     loop_length = len(all_maestro.data)
+    codec_delays = []
 
     for i, (path, meta) in enumerate(all_maestro.data, 1):
         basepath = os.path.basename(path)
@@ -153,11 +160,34 @@ if __name__ == "__main__":
 
         if not CONF.IGNORE_MEL:
             # compute logmel and add to corresponding HDF5
-            with torch.no_grad():
-                wave = torch_load_resample_audio(
-                    abspath + MAESTRO_METACLASS.AUDIO_EXT, CONF.TARGET_SR,
-                    mono=True, normalize_wav=True, device=CONF.DEVICE)
-                logmel = logmel_fn(wave).to("cpu").numpy()
+            audio_path = abspath + MAESTRO_METACLASS.AUDIO_EXT
+            temporary_audio = None
+            try:
+                if CONF.CODEC_VARIANT is not None:
+                    if CONF.CODEC_VARIANT not in CODECS:
+                        raise ValueError(
+                            f"Unknown codec variant: {CONF.CODEC_VARIANT}")
+                    fd, temporary_audio = tempfile.mkstemp(
+                        suffix=".wav", dir=CONF.OUTPUT_DIR)
+                    os.close(fd)
+                    delay = process_file(
+                        audio_path, temporary_audio, CONF.CODEC_SR,
+                        CODECS[CONF.CODEC_VARIANT])
+                    codec_delays.append({
+                        "file": path + MAESTRO_METACLASS.AUDIO_EXT,
+                        "delay_samples": delay,
+                        "delay_ms": delay / CONF.CODEC_SR * 1000,
+                    })
+                    audio_path = temporary_audio
+                with torch.no_grad():
+                    wave = torch_load_resample_audio(
+                        audio_path, CONF.TARGET_SR, mono=True,
+                        normalize_wav=True, device=CONF.DEVICE)
+                    logmel = logmel_fn(wave).to("cpu").numpy()
+            finally:
+                if temporary_audio is not None and \
+                        os.path.exists(temporary_audio):
+                    os.remove(temporary_audio)
             h5mel.append(logmel, metadata)
 
         # compute piano roll and add to corresponding HDF5
@@ -193,4 +223,19 @@ if __name__ == "__main__":
     if not CONF.IGNORE_MEL:
         h5mel.close()
     h5roll.close()
+    if CONF.CODEC_VARIANT is not None:
+        provenance = {
+            "schema_version": 1,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "variant": CONF.CODEC_VARIANT,
+            "codec_sr": CONF.CODEC_SR,
+            "spec": CODECS[CONF.CODEC_VARIANT],
+            "files": codec_delays,
+        }
+        provenance_path = os.path.join(
+            CONF.OUTPUT_DIR,
+            f"_codec_provenance_{CONF.CODEC_VARIANT}.json")
+        with open(provenance_path, "w", encoding="utf-8") as stream:
+            json.dump(provenance, stream, indent=2)
+            stream.write("\n")
     print("Done!")
