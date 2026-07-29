@@ -30,6 +30,7 @@ import csv
 import json
 import glob
 import subprocess
+import multiprocessing as mp
 import numpy as np
 from scipy.signal import correlate, correlation_lags
 
@@ -175,6 +176,22 @@ def selftest(sr=44100):
 
 
 # ############################################################################
+# # PARALLEL WORKER (module-level so it is picklable by multiprocessing)
+# ############################################################################
+def _render_one(task):
+    """Render one file. Returns (out_wav, delay_or_None, status).
+    process_file already makes the output dir (exist_ok, race-safe)."""
+    w, out_wav, sr, spec = task
+    if os.path.exists(out_wav):
+        return (out_wav, None, "skip")
+    try:
+        d = process_file(w, out_wav, sr, spec)
+        return (out_wav, d, "ok")
+    except Exception as e:  # keep one bad file from killing the whole run
+        return (out_wav, None, f"ERROR: {e}")
+
+
+# ############################################################################
 # # MAIN
 # ############################################################################
 def main():
@@ -222,27 +239,42 @@ def main():
         if not os.path.exists(dst):
             os.symlink(os.path.abspath(midi), dst)
 
-    delays, log = [], []
-    for i, w in enumerate(wavs, 1):
-        rel = os.path.relpath(w, in_root)
-        out_wav = os.path.join(out_root, rel)
-        if os.path.exists(out_wav):
-            continue
-        d = process_file(w, out_wav, sr, spec)
-        delays.append(d)
-        log.append({"file": rel, "delay_samples": d, "delay_ms": d / sr * 1000})
-        if i % 10 == 0 or i == len(wavs):
-            md = float(np.median(delays)) if delays else 0.0
-            print(f"[{i}/{len(wavs)}] median delay so far: {md:.1f} smp  {rel}")
+    # PARALLEL render: each file is independent (own ffmpeg round-trip), so a
+    # process pool turns this from single-core-serial into ~JOBS-way parallel.
+    # Codecs + mel are CPU-bound; on a 96-core box this is a ~30x speedup.
+    jobs = int(args.get("JOBS", min(32, os.cpu_count() or 8)))
+    tasks = [(w, os.path.join(out_root, os.path.relpath(w, in_root)), sr, spec)
+             for w in wavs]
+    print(f"[render] {len(tasks)} files across {jobs} workers", flush=True)
+
+    delays, log, errors = [], [], []
+    with mp.Pool(jobs) as pool:
+        for i, (out_wav, d, status) in enumerate(
+                pool.imap_unordered(_render_one, tasks, chunksize=1), 1):
+            rel = os.path.relpath(out_wav, out_root)
+            if status == "ok":
+                delays.append(d)
+                log.append({"file": rel, "delay_samples": d,
+                            "delay_ms": d / sr * 1000})
+            elif status.startswith("ERROR"):
+                errors.append({"file": rel, "error": status})
+                print(f"  !! {rel}: {status}", flush=True)
+            if i % 50 == 0 or i == len(tasks):
+                md = float(np.median(delays)) if delays else 0.0
+                print(f"[{i}/{len(tasks)}] ok={len(delays)} err={len(errors)} "
+                      f"skip={i - len(delays) - len(errors)} "
+                      f"median_delay={md:.1f} smp", flush=True)
 
     # provenance for the paper
-    prov = {"variant": variant, "codec_sr": sr, "spec": spec,
-            "n_files": len(wavs), "delay_samples_median": float(np.median(delays)) if delays else None,
+    prov = {"variant": variant, "codec_sr": sr, "spec": spec, "jobs": jobs,
+            "n_files": len(wavs), "n_ok": len(delays), "n_errors": len(errors),
+            "delay_samples_median": float(np.median(delays)) if delays else None,
             "delay_ms_median": float(np.median(delays) / sr * 1000) if delays else None,
-            "per_file": log}
+            "errors": errors, "per_file": log}
     with open(os.path.join(out_root, f"_codec_provenance_{variant}.json"), "w") as f:
         json.dump(prov, f, indent=2)
-    print(f"[render] done. provenance -> _codec_provenance_{variant}.json")
+    print(f"[render] done. ok={len(delays)} err={len(errors)} "
+          f"provenance -> _codec_provenance_{variant}.json", flush=True)
 
 
 if __name__ == "__main__":
