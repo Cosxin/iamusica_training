@@ -75,11 +75,17 @@ def decode_wav_to_pcm(path, sr, ch=2):
     return a.reshape(-1, ch)
 
 
-def pcm_to_wav(pcm, path, sr, ch=2):
-    """Write float32 (n, ch) PCM to a 16-bit wav via ffmpeg."""
+def pcm_to_wav(pcm, path, sr, ch=2, out_sr=None, out_ch=None):
+    """Write float32 (n, ch) PCM to a 16-bit wav via ffmpeg, optionally
+    resampling to out_sr and/or downmixing to out_ch on the way out (ffmpeg does
+    it). Storing 16k-mono (what 0a needs) makes the file ~5.5x smaller than
+    44.1k-stereo, which matters a lot for write-bound parallel runs."""
+    out_sr = out_sr or sr
+    out_ch = out_ch or ch
     b = np.ascontiguousarray(pcm.reshape(-1), dtype="<f4").tobytes()
     _run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(sr),
-          "-ac", str(ch), "-i", "-", "-acodec", "pcm_s16le", path], in_bytes=b)
+          "-ac", str(ch), "-i", "-", "-ar", str(out_sr), "-ac", str(out_ch),
+          "-acodec", "pcm_s16le", path], in_bytes=b)
 
 
 def codec_roundtrip(pcm, sr, spec, ch=2):
@@ -129,14 +135,16 @@ def align_and_fit(coded, d, target_len):
     return np.concatenate([coded, pad])
 
 
-def process_file(in_wav, out_wav, sr, spec):
-    """Full clean->codec->align pipeline for one file. Returns measured delay."""
+def process_file(in_wav, out_wav, sr, spec, out_sr=None, out_ch=None):
+    """Full clean->codec->align pipeline for one file. Returns measured delay.
+    Codec + delay-align run at `sr` (the A2DP rate, where the artifacts live);
+    the aligned result is written at out_sr/out_ch (default = same as input)."""
     clean = decode_wav_to_pcm(in_wav, sr)
     coded = codec_roundtrip(clean, sr, spec)
     d = measure_delay_samples(clean, coded, sr)
     aligned = align_and_fit(coded, d, len(clean))
     os.makedirs(os.path.dirname(out_wav), exist_ok=True)
-    pcm_to_wav(aligned, out_wav, sr)
+    pcm_to_wav(aligned, out_wav, sr, out_sr=out_sr, out_ch=out_ch)
     return d
 
 
@@ -181,11 +189,11 @@ def selftest(sr=44100):
 def _render_one(task):
     """Render one file. Returns (out_wav, delay_or_None, status).
     process_file already makes the output dir (exist_ok, race-safe)."""
-    w, out_wav, sr, spec = task
+    w, out_wav, sr, spec, out_sr, out_ch = task
     if os.path.exists(out_wav):
         return (out_wav, None, "skip")
     try:
-        d = process_file(w, out_wav, sr, spec)
+        d = process_file(w, out_wav, sr, spec, out_sr=out_sr, out_ch=out_ch)
         return (out_wav, d, "ok")
     except Exception as e:  # keep one bad file from killing the whole run
         return (out_wav, None, f"ERROR: {e}")
@@ -243,9 +251,16 @@ def main():
     # process pool turns this from single-core-serial into ~JOBS-way parallel.
     # Codecs + mel are CPU-bound; on a 96-core box this is a ~30x speedup.
     jobs = int(args.get("JOBS", min(32, os.cpu_count() or 8)))
-    tasks = [(w, os.path.join(out_root, os.path.relpath(w, in_root)), sr, spec)
-             for w in wavs]
-    print(f"[render] {len(tasks)} files across {jobs} workers", flush=True)
+    # Store compact 16k-mono by default (what 0a consumes) -> ~5.5x smaller
+    # writes than 44.1k-stereo. OUTPUT_SR=0 keeps the codec rate/full stereo.
+    out_sr = int(args.get("OUTPUT_SR", 16000))
+    out_ch = int(args.get("OUTPUT_CH", 1))
+    if out_sr == 0:
+        out_sr, out_ch = sr, 2
+    tasks = [(w, os.path.join(out_root, os.path.relpath(w, in_root)),
+              sr, spec, out_sr, out_ch) for w in wavs]
+    print(f"[render] {len(tasks)} files across {jobs} workers "
+          f"-> {out_sr}Hz/{out_ch}ch", flush=True)
 
     delays, log, errors = [], [], []
     with mp.Pool(jobs) as pool:
