@@ -204,12 +204,18 @@ if __name__ == "__main__":
         _, len_roll = roll.shape
         if not CONF.IGNORE_MEL:
             _, len_logmel = logmel.shape
-            assert len_logmel >= len_roll, \
-                "Wav isn't expected to be shorter than MIDI!"
-            if len_logmel > len_roll:
-                # print("WARNING: wav is longer than MIDI.",
-                #       "Padding MIDI end with zeros")
-                roll = np.pad(roll, ((0, 0), (0, len_logmel - len_roll)))
+            if len_logmel >= len_roll:
+                if len_logmel > len_roll:
+                    # print("WARNING: wav is longer than MIDI.",
+                    #       "Padding MIDI end with zeros")
+                    roll = np.pad(roll, ((0, 0), (0, len_logmel - len_roll)))
+            else:
+                # rendered wav shorter than MIDI (codec-render truncation on a
+                # few very long files): trim the roll to the audio length instead
+                # of aborting the whole run.
+                print(f"WARNING: wav shorter than MIDI by "
+                      f"{len_roll - len_logmel} frames; trimming roll", flush=True)
+                roll = roll[:, :len_logmel]
             assert len_logmel == roll.shape[1], \
                 "Logmel and roll have different length?"
         # plt.clf(); plt.imshow(logmel[::-1]); plt.show()
