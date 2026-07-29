@@ -69,7 +69,7 @@ def _run(cmd, in_bytes=None):
 
 def decode_wav_to_pcm(path, sr, ch=2):
     """Load any audio file, resample to `sr`, return float32 array (n, ch)."""
-    raw = _run(["ffmpeg", "-v", "error", "-i", path, "-ar", str(sr),
+    raw = _run(["ffmpeg", "-v", "error", "-threads", "1","-i", path, "-ar", str(sr),
                 "-ac", str(ch), "-f", "f32le", "-acodec", "pcm_f32le", "-"])
     a = np.frombuffer(raw, dtype="<f4").astype(np.float32)
     return a.reshape(-1, ch)
@@ -83,7 +83,7 @@ def pcm_to_wav(pcm, path, sr, ch=2, out_sr=None, out_ch=None):
     out_sr = out_sr or sr
     out_ch = out_ch or ch
     b = np.ascontiguousarray(pcm.reshape(-1), dtype="<f4").tobytes()
-    _run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(sr),
+    _run(["ffmpeg", "-v", "error", "-threads", "1","-y", "-f", "f32le", "-ar", str(sr),
           "-ac", str(ch), "-i", "-", "-ar", str(out_sr), "-ac", str(out_ch),
           "-acodec", "pcm_s16le", path], in_bytes=b)
 
@@ -92,10 +92,10 @@ def codec_roundtrip(pcm, sr, spec, ch=2):
     """Encode PCM through the codec and decode back. Returns float32 (m, ch)."""
     b = np.ascontiguousarray(pcm.reshape(-1), dtype="<f4").tobytes()
     enc = [c.format(sr=sr) for c in spec["enc"]]
-    stream = _run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(sr),
+    stream = _run(["ffmpeg", "-v", "error", "-threads", "1","-f", "f32le", "-ar", str(sr),
                    "-ac", str(ch), "-i", "-"] + enc, in_bytes=b)
     dec_infmt = [c.format(sr=sr, ch=ch) for c in spec["dec_infmt"]]
-    dec = _run(["ffmpeg", "-v", "error"] + dec_infmt +
+    dec = _run(["ffmpeg", "-v", "error", "-threads", "1"] + dec_infmt +
                ["-i", "-", "-ar", str(sr), "-ac", str(ch),
                 "-f", "f32le", "-acodec", "pcm_f32le", "-"], in_bytes=stream)
     return np.frombuffer(dec, dtype="<f4").astype(np.float32).reshape(-1, ch)
