@@ -118,6 +118,7 @@ if __name__ == "__main__":
         return probs, vels, frames
 
     on_f1s, off_f1s, per_file = [], [], []
+    gt_durs, pred_durs = [], []
     for i, (mel, roll, md) in enumerate(ds, 1):
         with torch.no_grad():
             tmel = torch.from_numpy(mel).to(CONF.DEVICE).unsqueeze(0)
@@ -137,6 +138,8 @@ if __name__ == "__main__":
         _, _, off_f1 = score(gt_on, gt_off, gt_key, pr_on, pr_off, pr_key,
                              CONF.TOLERANCE_SECS, CONF.OFFSET_RATIO)
         on_f1s.append(on_f1); off_f1s.append(off_f1)
+        if len(gt_on): gt_durs.extend((gt_off - gt_on).tolist())
+        if len(pr_on): pred_durs.extend((pr_off - pr_on).tolist())
         per_file.append({"file": md[0], "onset_f1": on_f1, "offset_f1": off_f1})
         if i % 10 == 0 or i == len(ds):
             print(f"[{i}/{len(ds)}] mean onset_f1={np.mean(on_f1s):.4f} "
@@ -147,6 +150,10 @@ if __name__ == "__main__":
               "onset_f1_mean": float(np.mean(on_f1s)),
               "note_with_offset_f1_mean": float(np.mean(off_f1s)),
               "per_file": per_file}
+    result["gt_dur_median"] = float(np.median(gt_durs)) if gt_durs else None
+    result["pred_dur_median"] = float(np.median(pred_durs)) if pred_durs else None
+    print(f"[dur] GT median={np.median(gt_durs):.3f}s mean={np.mean(gt_durs):.3f}s | "
+          f"PRED median={np.median(pred_durs):.3f}s mean={np.mean(pred_durs):.3f}s", flush=True)
     print(f"[offset-eval] DONE onset_f1={result['onset_f1_mean']:.4f} "
           f"note_with_offset_f1={result['note_with_offset_f1_mean']:.4f}", flush=True)
     if CONF.RESULTS_JSON:
