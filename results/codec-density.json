@@ -1,0 +1,1699 @@
+{
+  "n": 169,
+  "ioi_thr": 0.15,
+  "pearson_r": 0.08679757319992638,
+  "lo_density_mean_drop": 0.0037993417511360565,
+  "hi_density_mean_drop": 0.026248101756227087,
+  "rows": [
+    {
+      "file": "MIDI-Unprocessed_11_R1_2009_06-09_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_07_WAV",
+      "title": "Alexander Scriabin - Entragete, Op.63",
+      "dur_min": 2.729097164066667,
+      "fast_repeats": 8,
+      "density_per_min": 2.9313723620155336,
+      "clean_f1": 0.9767769176636171,
+      "sbc_f1": 0.9705056179775281,
+      "codec_drop": 0.006271299686088971
+    },
+    {
+      "file": "MIDI-Unprocessed_02_R1_2009_03-06_ORIG_MID--AUDIO_02_R1_2009_02_R1_2009_04_WAV",
+      "title": "Alexander Scriabin - Etude Op. 42, Nos. 4 & 5",
+      "dur_min": 2.2719216953166663,
+      "fast_repeats": 5,
+      "density_per_min": 2.2007800754343725,
+      "clean_f1": 0.9768041237113403,
+      "sbc_f1": 0.9684074790457771,
+      "codec_drop": 0.008396644665563224
+    },
+    {
+      "file": "MIDI-Unprocessed_01_R1_2006_01-09_ORIG_MID--AUDIO_01_R1_2006_04_Track04_wav",
+      "title": "Alexander Scriabin - Sonata No. 9",
+      "dur_min": 7.944213921866666,
+      "fast_repeats": 342,
+      "density_per_min": 43.05020022920527,
+      "clean_f1": 0.9537596626844693,
+      "sbc_f1": 0.9464511595221363,
+      "codec_drop": 0.007308503162333002
+    },
+    {
+      "file": "MIDI-Unprocessed_24_R1_2006_01-05_ORIG_MID--AUDIO_24_R1_2006_03_Track03_wav",
+      "title": "Alexander Scriabin - Sonata No. 9",
+      "dur_min": 7.1044711718833335,
+      "fast_repeats": 397,
+      "density_per_min": 55.880302755139304,
+      "clean_f1": 0.9313161065738386,
+      "sbc_f1": 0.9239042753428341,
+      "codec_drop": 0.007411831231004418
+    },
+    {
+      "file": "MIDI-Unprocessed_11_R1_2009_06-09_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_08_WAV",
+      "title": "Alexander Scriabin - Sonata No. 9, Op. 68",
+      "dur_min": 8.668995070316667,
+      "fast_repeats": 291,
+      "density_per_min": 33.567904657877506,
+      "clean_f1": 0.9420751113940166,
+      "sbc_f1": 0.9352371239163693,
+      "codec_drop": 0.0068379874776473
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital13-15_MID--AUDIO_15_R1_2018_wav--1",
+      "title": "Alexander Scriabin - Sonata No. 9, Op. 68, \"Black Mass\"",
+      "dur_min": 8.670263765616665,
+      "fast_repeats": 205,
+      "density_per_min": 23.644032700938197,
+      "clean_f1": 0.9633375474083438,
+      "sbc_f1": 0.9569606056357773,
+      "codec_drop": 0.006376941772566425
+    },
+    {
+      "file": "MIDI-UNPROCESSED_09-10_R1_2014_MID--AUDIO_09_R1_2014_wav--4",
+      "title": "Claude Debussy - Estampes (Complete)",
+      "dur_min": 14.150515585933334,
+      "fast_repeats": 212,
+      "density_per_min": 14.981786261607583,
+      "clean_f1": 0.9389753218884119,
+      "sbc_f1": 0.9304078610849374,
+      "codec_drop": 0.00856746080347448
+    },
+    {
+      "file": "MIDI-Unprocessed_11_R1_2009_01-05_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_04_WAV",
+      "title": "Claude Debussy - Etude \"Pour les accords\"",
+      "dur_min": 4.511725367183333,
+      "fast_repeats": 8,
+      "density_per_min": 1.7731575725307045,
+      "clean_f1": 0.9149647233568512,
+      "sbc_f1": 0.9104754829123329,
+      "codec_drop": 0.004489240444518261
+    },
+    {
+      "file": "MIDI-Unprocessed_SMF_17_R1_2004_03-06_ORIG_MID--AUDIO_20_R2_2004_12_Track12_wav--1",
+      "title": "Claude Debussy - Etude No. 7 \"Study in Chromatic Steps\"",
+      "dur_min": 2.2396079717333333,
+      "fast_repeats": 22,
+      "density_per_min": 9.823147746242933,
+      "clean_f1": 0.972452527413747,
+      "sbc_f1": 0.9633787757284149,
+      "codec_drop": 0.009073751685332088
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R3_2011_MID--AUDIO_R3-D2_05_Track05_wav",
+      "title": "Claude Debussy - Jardins sous la pluie from Estampes",
+      "dur_min": 3.454367984366667,
+      "fast_repeats": 109,
+      "density_per_min": 31.55425261387847,
+      "clean_f1": 0.9714814814814815,
+      "sbc_f1": 0.9625648628613788,
+      "codec_drop": 0.008916618620102734
+    },
+    {
+      "file": "MIDI-Unprocessed_05_R1_2008_01-04_ORIG_MID--AUDIO_05_R1_2008_wav--3",
+      "title": "Claude Debussy - Pagodas from Estampes No. 1",
+      "dur_min": 5.763660546883333,
+      "fast_repeats": 46,
+      "density_per_min": 7.981039068109977,
+      "clean_f1": 0.9615526802218114,
+      "sbc_f1": 0.9557949479940564,
+      "codec_drop": 0.005757732227754997
+    },
+    {
+      "file": "MIDI-Unprocessed_R2_D2-12-13-15_mid--AUDIO-from_mp3_12_R2_2015_wav--3",
+      "title": "Claude Debussy - Pour le piano (Complete)",
+      "dur_min": 12.315972222216667,
+      "fast_repeats": 195,
+      "density_per_min": 15.833098393015318,
+      "clean_f1": 0.9647506755097027,
+      "sbc_f1": 0.95481554840307,
+      "codec_drop": 0.00993512710663269
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital16_MID--AUDIO_16_R1_2018_wav--3",
+      "title": "Claude Debussy - Prelude No. 6, Book I, \"Des pas sur la neige\"",
+      "dur_min": 4.12935840625,
+      "fast_repeats": 1,
+      "density_per_min": 0.24216837135920383,
+      "clean_f1": 0.9850340136054422,
+      "sbc_f1": 0.975609756097561,
+      "codec_drop": 0.009424257507881229
+    },
+    {
+      "file": "MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--2",
+      "title": "Domenico Scarlatti - Sonata K. 525",
+      "dur_min": 1.0991352968750001,
+      "fast_repeats": 77,
+      "density_per_min": 70.05506985256692,
+      "clean_f1": 0.9722222222222222,
+      "sbc_f1": 0.9694171956145412,
+      "codec_drop": 0.002805026607681005
+    },
+    {
+      "file": "MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--1",
+      "title": "Domenico Scarlatti - Sonata K. 54",
+      "dur_min": 3.42957278125,
+      "fast_repeats": 19,
+      "density_per_min": 5.540048633426271,
+      "clean_f1": 0.9946043165467626,
+      "sbc_f1": 0.9932523616734144,
+      "codec_drop": 0.0013519548733482711
+    },
+    {
+      "file": "MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_01_R1_2014_wav--2",
+      "title": "Domenico Scarlatti - Sonata in A Major, K. 208",
+      "dur_min": 2.44470909375,
+      "fast_repeats": 25,
+      "density_per_min": 10.226165585064308,
+      "clean_f1": 0.992047713717694,
+      "sbc_f1": 0.9940357852882703,
+      "codec_drop": -0.001988071570576344
+    },
+    {
+      "file": "MIDI-UNPROCESSED_19-21_R3_2014_MID--AUDIO_21_R3_2014_wav--1",
+      "title": "Domenico Scarlatti - Sonata in C Major, K. 132",
+      "dur_min": 4.028129875,
+      "fast_repeats": 511,
+      "density_per_min": 126.85787595167844,
+      "clean_f1": 0.9556595979069127,
+      "sbc_f1": 0.9412737799834575,
+      "codec_drop": 0.014385817923455169
+    },
+    {
+      "file": "MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_01_R1_2014_wav--1",
+      "title": "Domenico Scarlatti - Sonata in D Major, K. 118",
+      "dur_min": 2.2779980781333333,
+      "fast_repeats": 93,
+      "density_per_min": 40.82531978086973,
+      "clean_f1": 0.994535519125683,
+      "sbc_f1": 0.9941648431801605,
+      "codec_drop": 0.00037067594552253613
+    },
+    {
+      "file": "MIDI-Unprocessed_10_R2_2008_01-05_ORIG_MID--AUDIO_10_R2_2008_wav--2",
+      "title": "Domenico Scarlatti - Sonata in D Major, K. 96 L. 465",
+      "dur_min": 2.3127647812500003,
+      "fast_repeats": 137,
+      "density_per_min": 59.23646066849669,
+      "clean_f1": 0.9776760160274757,
+      "sbc_f1": 0.9717062017719349,
+      "codec_drop": 0.005969814255540773
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital17-19_MID--AUDIO_18_R1_2018_wav--3",
+      "title": "Domenico Scarlatti - Sonata in D Major, K96",
+      "dur_min": 2.3353564609333333,
+      "fast_repeats": 177,
+      "density_per_min": 75.7914275447532,
+      "clean_f1": 0.9839790270900087,
+      "sbc_f1": 0.97708152016246,
+      "codec_drop": 0.006897506927548758
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital9-11_MID--AUDIO_09_R1_2018_wav--5",
+      "title": "Domenico Scarlatti - Sonata in D Minor, K. 213",
+      "dur_min": 3.57825496875,
+      "fast_repeats": 21,
+      "density_per_min": 5.868782460556738,
+      "clean_f1": 0.9917203311867525,
+      "sbc_f1": 0.9885163068442812,
+      "codec_drop": 0.0032040243424713566
+    },
+    {
+      "file": "MIDI-UNPROCESSED_11-13_R1_2014_MID--AUDIO_11_R1_2014_wav--1",
+      "title": "Domenico Scarlatti - Sonata in D Minor, K. 9",
+      "dur_min": 3.6303827656166665,
+      "fast_repeats": 163,
+      "density_per_min": 44.89884690500738,
+      "clean_f1": 0.9811320754716982,
+      "sbc_f1": 0.9799054373522459,
+      "codec_drop": 0.001226638119452339
+    },
+    {
+      "file": "MIDI-Unprocessed_10_R2_2008_01-05_ORIG_MID--AUDIO_10_R2_2008_wav--1",
+      "title": "Domenico Scarlatti - Sonata in D Minor, K. 9 L. 413",
+      "dur_min": 1.5995131796883333,
+      "fast_repeats": 63,
+      "density_per_min": 39.38698398988848,
+      "clean_f1": 0.9871794871794871,
+      "sbc_f1": 0.986046511627907,
+      "codec_drop": 0.0011329755515800954
+    },
+    {
+      "file": "MIDI-Unprocessed_083_PIANO083_MID--AUDIO-split_07-09-17_Piano-e_2_-06_wav--1",
+      "title": "Domenico Scarlatti - Sonata in F Minor, K. 466",
+      "dur_min": 3.9964013577166666,
+      "fast_repeats": 25,
+      "density_per_min": 6.255627941805045,
+      "clean_f1": 0.9964507542147293,
+      "sbc_f1": 0.9946761313220942,
+      "codec_drop": 0.0017746228926350804
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_04_R1_2004_03-05_ORIG_MID--AUDIO_04_R1_2004_06_Track06_wav",
+      "title": "Domenico Scarlatti - Sonata, K239",
+      "dur_min": 3.2669241232333333,
+      "fast_repeats": 36,
+      "density_per_min": 11.01953967769847,
+      "clean_f1": 0.9936691439581613,
+      "sbc_f1": 0.9903978052126201,
+      "codec_drop": 0.003271338745541197
+    },
+    {
+      "file": "MIDI-Unprocessed_01_R1_2006_01-09_ORIG_MID--AUDIO_01_R1_2006_02_Track02_wav",
+      "title": "Domenico Scarlatti - Two Sonatas",
+      "dur_min": 6.226845625,
+      "fast_repeats": 172,
+      "density_per_min": 27.62233245504621,
+      "clean_f1": 0.9898181818181819,
+      "sbc_f1": 0.988021778584392,
+      "codec_drop": 0.0017964032337899338
+    },
+    {
+      "file": "MIDI-Unprocessed_059_PIANO059_MID--AUDIO-split_07-07-17_Piano-e_2-03_wav--4",
+      "title": "Felix Mendelssohn - Fantasy in F-sharp Minor, Op. 28 (Complete)",
+      "dur_min": 11.0200848902,
+      "fast_repeats": 71,
+      "density_per_min": 6.4427815853886266,
+      "clean_f1": 0.981230956733699,
+      "sbc_f1": 0.9773308957952468,
+      "codec_drop": 0.003900060938452188
+    },
+    {
+      "file": "ORIG-MIDI_02_7_6_13_Group__MID--AUDIO_08_R1_2013_wav--4",
+      "title": "Franz Liszt - Au bord d'une source",
+      "dur_min": 3.6609204843833334,
+      "fast_repeats": 58,
+      "density_per_min": 15.843010042806176,
+      "clean_f1": 0.9678949288580809,
+      "sbc_f1": 0.9598974546786302,
+      "codec_drop": 0.007997474179450736
+    },
+    {
+      "file": "MIDI-Unprocessed_14_R1_2008_01-05_ORIG_MID--AUDIO_14_R1_2008_wav--3",
+      "title": "Franz Liszt - Concert Etude \"Gnomenreigen\"",
+      "dur_min": 2.8030376171833336,
+      "fast_repeats": 627,
+      "density_per_min": 223.68590280641635,
+      "clean_f1": 0.9279811097992916,
+      "sbc_f1": 0.9145847400405132,
+      "codec_drop": 0.013396369758778448
+    },
+    {
+      "file": "MIDI-Unprocessed_06_R1_2008_01-04_ORIG_MID--AUDIO_06_R1_2008_wav--3",
+      "title": "Franz Liszt - Concert Etude \"Waldesrauschen\"",
+      "dur_min": 3.5955715468833334,
+      "fast_repeats": 90,
+      "density_per_min": 25.03079102347793,
+      "clean_f1": 0.9448199968558402,
+      "sbc_f1": 0.9352495262160455,
+      "codec_drop": 0.00957047063979466
+    },
+    {
+      "file": "MIDI-Unprocessed_17_R1_2008_01-04_ORIG_MID--AUDIO_17_R1_2008_wav--3",
+      "title": "Franz Liszt - Concert Etude \"Waldesrauschen\"",
+      "dur_min": 3.8075104375,
+      "fast_repeats": 157,
+      "density_per_min": 41.234292742500195,
+      "clean_f1": 0.9331675474044141,
+      "sbc_f1": 0.9200499687695189,
+      "codec_drop": 0.013117578634895155
+    },
+    {
+      "file": "ORIG-MIDI_02_7_6_13_Group__MID--AUDIO_08_R1_2013_wav--5",
+      "title": "Franz Liszt - Concert Etude No. 2 \"Gnomenreigen\"",
+      "dur_min": 2.6967788203166667,
+      "fast_repeats": 683,
+      "density_per_min": 253.2651157204651,
+      "clean_f1": 0.966824644549763,
+      "sbc_f1": 0.9575200918484501,
+      "codec_drop": 0.009304552701312918
+    },
+    {
+      "file": "MIDI-Unprocessed_02_R1_2011_MID--AUDIO_R1-D1_10_Track10_wav",
+      "title": "Franz Liszt - Concert Etude No. 2, \"Gnomenreigen\", S. 145/2",
+      "dur_min": 2.582952367183333,
+      "fast_repeats": 751,
+      "density_per_min": 290.7525549218521,
+      "clean_f1": 0.9513425549227014,
+      "sbc_f1": 0.9389425437878539,
+      "codec_drop": 0.012400011134847455
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R1_2008_01-04_ORIG_MID--AUDIO_04_R1_2008_wav--4",
+      "title": "Franz Liszt - Hungarian Rhapsody No. 9",
+      "dur_min": 10.536202960933334,
+      "fast_repeats": 449,
+      "density_per_min": 42.6149725536633,
+      "clean_f1": 0.947542728724348,
+      "sbc_f1": 0.9379178605539636,
+      "codec_drop": 0.009624868170384326
+    },
+    {
+      "file": "MIDI-Unprocessed_R2_D2-12-13-15_mid--AUDIO-from_mp3_13_R2_2015_wav--4",
+      "title": "Franz Liszt - Hungarian Rhapsody No. 9 in E-flat Major, S. 244",
+      "dur_min": 10.751857638883333,
+      "fast_repeats": 388,
+      "density_per_min": 36.08678732843573,
+      "clean_f1": 0.9591931910924565,
+      "sbc_f1": 0.9489645406808661,
+      "codec_drop": 0.010228650411590379
+    },
+    {
+      "file": "MIDI-Unprocessed_07_R1_2006_01-04_ORIG_MID--AUDIO_07_R1_2006_04_Track04_wav",
+      "title": "Franz Liszt - Rem. of Don Juan",
+      "dur_min": 16.594423398433335,
+      "fast_repeats": 1497,
+      "density_per_min": 90.21102837121357,
+      "clean_f1": 0.9047514916747367,
+      "sbc_f1": 0.2059968437664387,
+      "codec_drop": 0.698754647908298
+    },
+    {
+      "file": "MIDI-UNPROCESSED_11-13_R1_2014_MID--AUDIO_13_R1_2014_wav--6",
+      "title": "Franz Liszt - R\u00e9miniscences de Don Juan, S.418",
+      "dur_min": 16.28372659375,
+      "fast_repeats": 1174,
+      "density_per_min": 72.09651876927258,
+      "clean_f1": 0.920072235970838,
+      "sbc_f1": 0.9022273063723841,
+      "codec_drop": 0.01784492959845385
+    },
+    {
+      "file": "ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_13_R1_2013_wav--3",
+      "title": "Franz Liszt - Transcendental Etude No. 10 in F Minor",
+      "dur_min": 4.287967578133333,
+      "fast_repeats": 399,
+      "density_per_min": 93.05107670000045,
+      "clean_f1": 0.9016088431651527,
+      "sbc_f1": 0.8875568875568876,
+      "codec_drop": 0.01405195560826511
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R3_2008_01-07_ORIG_MID--AUDIO_04_R3_2008_wav--6",
+      "title": "Franz Liszt - Transcendental Etude No. 10 in F Minor \"Appassionata\"",
+      "dur_min": 5.096972289066667,
+      "fast_repeats": 153,
+      "density_per_min": 30.017820643874177,
+      "clean_f1": 0.9618569636135509,
+      "sbc_f1": 0.9524288950415303,
+      "codec_drop": 0.00942806857202061
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital17-19_MID--AUDIO_19_R1_2018_wav--3",
+      "title": "Franz Liszt - Transcendental Etude No. 10 in F Minor, S. 139/10",
+      "dur_min": 3.9204020625,
+      "fast_repeats": 227,
+      "density_per_min": 57.90222440992301,
+      "clean_f1": 0.9314966492926285,
+      "sbc_f1": 0.9196004993757801,
+      "codec_drop": 0.011896149916848398
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R3_2008_01-07_ORIG_MID--AUDIO_04_R3_2008_wav--7",
+      "title": "Franz Liszt - Transcendental Etude No. 11 \"Harmonies du Soir\"",
+      "dur_min": 10.124656007816666,
+      "fast_repeats": 266,
+      "density_per_min": 26.272497534201324,
+      "clean_f1": 0.9406364749082008,
+      "sbc_f1": 0.9300225733634311,
+      "codec_drop": 0.01061390154476971
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R3_2008_01-07_ORIG_MID--AUDIO_04_R3_2008_wav--3",
+      "title": "Franz Liszt - Transcendental Etude No. 3 \"Paysage\"",
+      "dur_min": 4.341920515633333,
+      "fast_repeats": 10,
+      "density_per_min": 2.303128296336708,
+      "clean_f1": 0.9733901011176157,
+      "sbc_f1": 0.970580439968195,
+      "codec_drop": 0.002809661149420717
+    },
+    {
+      "file": "ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_01_R1_2013_wav--4",
+      "title": "Franz Liszt - Transcendental Etude No. 8 \"Wilde Jagd\"",
+      "dur_min": 5.2925294296833325,
+      "fast_repeats": 677,
+      "density_per_min": 127.91615219048614,
+      "clean_f1": 0.9118905047048759,
+      "sbc_f1": 0.8987966409834647,
+      "codec_drop": 0.013093863721411192
+    },
+    {
+      "file": "ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--4",
+      "title": "Franz Liszt - Transcendental Etude No. 8 \"Wilde Jagd\"",
+      "dur_min": 4.978471695316667,
+      "fast_repeats": 567,
+      "density_per_min": 113.89037333151587,
+      "clean_f1": 0.8771071709319591,
+      "sbc_f1": 0.8689886845827439,
+      "codec_drop": 0.008118486349215193
+    },
+    {
+      "file": "MIDI-Unprocessed_14_R1_2011_MID--AUDIO_R1-D6_04_Track04_wav",
+      "title": "Franz Liszt - Transcendental Etude No. 8, \"Wilde Jagd\", S. 139/8",
+      "dur_min": 5.924985171883334,
+      "fast_repeats": 631,
+      "density_per_min": 106.49815682145048,
+      "clean_f1": 0.9328114807566863,
+      "sbc_f1": 0.9206893735195621,
+      "codec_drop": 0.012122107237124147
+    },
+    {
+      "file": "MIDI-Unprocessed_075_PIANO075_MID--AUDIO-split_07-08-17_Piano-e_2-06_wav--3",
+      "title": "Franz Liszt - Tristan and Isolde - Liebestod, S.447",
+      "dur_min": 6.3601362141,
+      "fast_repeats": 328,
+      "density_per_min": 51.571222527097106,
+      "clean_f1": 0.9446946946946947,
+      "sbc_f1": 0.9345794392523364,
+      "codec_drop": 0.01011525544235825
+    },
+    {
+      "file": "MIDI-Unprocessed_065_PIANO065_MID--AUDIO-split_07-07-17_Piano-e_3-01_wav--3",
+      "title": "Franz Liszt - \u00c9tudes d'ex\u00e9cution transcendante, No. 10 in F Minor, S.139/10",
+      "dur_min": 4.457599240283333,
+      "fast_repeats": 103,
+      "density_per_min": 23.10660838892577,
+      "clean_f1": 0.9669122237482831,
+      "sbc_f1": 0.9594272076372314,
+      "codec_drop": 0.007485016111051679
+    },
+    {
+      "file": "MIDI-Unprocessed_08_R1_2009_01-04_ORIG_MID--AUDIO_08_R1_2009_08_R1_2009_04_WAV",
+      "title": "Franz Schubert - \"Erlkoenig\"",
+      "dur_min": 4.578943960933334,
+      "fast_repeats": 1755,
+      "density_per_min": 383.2761472892705,
+      "clean_f1": 0.917167880130843,
+      "sbc_f1": 0.8981324278438031,
+      "codec_drop": 0.019035452287039956
+    },
+    {
+      "file": "MIDI-Unprocessed_08_R1_2009_01-04_ORIG_MID--AUDIO_08_R1_2009_08_R1_2009_03_WAV",
+      "title": "Franz Schubert - \"Gretchen am Spinnrade\"",
+      "dur_min": 3.9403450625,
+      "fast_repeats": 21,
+      "density_per_min": 5.329482486154726,
+      "clean_f1": 0.9578119413657491,
+      "sbc_f1": 0.9505092013578703,
+      "codec_drop": 0.007302740007878783
+    },
+    {
+      "file": "MIDI-Unprocessed_072_PIANO072_MID--AUDIO-split_07-08-17_Piano-e_1-06_wav--2",
+      "title": "Franz Schubert - Impromptu Op. 142 No. 4 in F Minor, D. 935",
+      "dur_min": 6.278850999866666,
+      "fast_repeats": 80,
+      "density_per_min": 12.74118465332253,
+      "clean_f1": 0.9872886039571128,
+      "sbc_f1": 0.984070796460177,
+      "codec_drop": 0.0032178074969357873
+    },
+    {
+      "file": "MIDI-Unprocessed_02_R2_2011_MID--AUDIO_R2-D1_02_Track02_wav",
+      "title": "Franz Schubert - Impromptu Op. 142 No. 4, in F Minor, D935",
+      "dur_min": 5.486573039066667,
+      "fast_repeats": 113,
+      "density_per_min": 20.59573420337127,
+      "clean_f1": 0.9742279493445901,
+      "sbc_f1": 0.9710289710289709,
+      "codec_drop": 0.0031989783156192164
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R2_2008_01-04_ORIG_MID--AUDIO_04_R2_2008_wav--3",
+      "title": "Franz Schubert - Impromptu Op. 90 No. 4 in A-flat Major",
+      "dur_min": 6.6785234140666665,
+      "fast_repeats": 263,
+      "density_per_min": 39.379962260228844,
+      "clean_f1": 0.9544907295930652,
+      "sbc_f1": 0.9505236547490068,
+      "codec_drop": 0.003967074844058449
+    },
+    {
+      "file": "MIDI-Unprocessed_10_R2_2008_01-05_ORIG_MID--AUDIO_10_R2_2008_wav--4",
+      "title": "Franz Schubert - Impromptu Op. 90 No. 4 in A-flat Major",
+      "dur_min": 5.70841665625,
+      "fast_repeats": 280,
+      "density_per_min": 49.05037891609316,
+      "clean_f1": 0.9554001928640308,
+      "sbc_f1": 0.9501388385850537,
+      "codec_drop": 0.005261354278977115
+    },
+    {
+      "file": "MIDI-Unprocessed_R2_D1-2-3-6-7-8-11_mid--AUDIO-from_mp3_03_R2_2015_wav--1",
+      "title": "Franz Schubert - Impromptu Op. 90 No. 4 in A-flat Major",
+      "dur_min": 1.8812152777833333,
+      "fast_repeats": 87,
+      "density_per_min": 46.24670075107699,
+      "clean_f1": 0.9841986455981941,
+      "sbc_f1": 0.9796656122910077,
+      "codec_drop": 0.004533033307186463
+    },
+    {
+      "file": "MIDI-Unprocessed_R2_D1-2-3-6-7-8-11_mid--AUDIO-from_mp3_06_R2_2015_wav--1",
+      "title": "Franz Schubert - Impromptu Op. 90 No. 4 in A-flat Major",
+      "dur_min": 5.902517361116667,
+      "fast_repeats": 241,
+      "density_per_min": 40.83003661922418,
+      "clean_f1": 0.9707685054219707,
+      "sbc_f1": 0.9657453342782896,
+      "codec_drop": 0.0050231711436811155
+    },
+    {
+      "file": "MIDI-Unprocessed_R2_D2-19-21-22_mid--AUDIO-from_mp3_19_R2_2015_wav--3",
+      "title": "Franz Schubert - Impromptu Op. 90 No. 4 in A-flat Major",
+      "dur_min": 6.115729166666667,
+      "fast_repeats": 306,
+      "density_per_min": 50.03491679583042,
+      "clean_f1": 0.9749456583914884,
+      "sbc_f1": 0.9693490988405464,
+      "codec_drop": 0.00559655955094196
+    },
+    {
+      "file": "ORIG-MIDI_01_7_8_13_Group__MID--AUDIO_07_R2_2013_wav--2",
+      "title": "Franz Schubert - Moment Musical Op. 94 No. 4 in C-sharp Minor, D780",
+      "dur_min": 6.909871117183333,
+      "fast_repeats": 0,
+      "density_per_min": 0.0,
+      "clean_f1": 0.9755157123578175,
+      "sbc_f1": 0.9755157123578175,
+      "codec_drop": 0.0
+    },
+    {
+      "file": "MIDI-Unprocessed_23_R2_2011_MID--AUDIO_R2-D6_03_Track03_wav",
+      "title": "Franz Schubert - Moment Musical Op. 94 No. 4, in C-sharp Minor, D780",
+      "dur_min": 5.337735046883334,
+      "fast_repeats": 16,
+      "density_per_min": 2.997526077908698,
+      "clean_f1": 0.972377824995171,
+      "sbc_f1": 0.9666216476943856,
+      "codec_drop": 0.00575617730078537
+    },
+    {
+      "file": "MIDI-Unprocessed_078_PIANO078_MID--AUDIO-split_07-09-17_Piano-e_1-02_wav--2",
+      "title": "Franz Schubert - Sonata in A Major, D. 664 (Complete)",
+      "dur_min": 15.058580058750001,
+      "fast_repeats": 73,
+      "density_per_min": 4.847734628045645,
+      "clean_f1": 0.983322688240721,
+      "sbc_f1": 0.9791282124094846,
+      "codec_drop": 0.004194475831236444
+    },
+    {
+      "file": "MIDI-Unprocessed_071_PIANO071_MID--AUDIO-split_07-08-17_Piano-e_1-04_wav--2",
+      "title": "Franz Schubert - Sonata in A Major, D. 664, I. Allegro moderato",
+      "dur_min": 5.702696415616667,
+      "fast_repeats": 5,
+      "density_per_min": 0.8767782178107266,
+      "clean_f1": 0.9831735889243878,
+      "sbc_f1": 0.9814221652786675,
+      "codec_drop": 0.0017514236457202292
+    },
+    {
+      "file": "ORIG-MIDI_02_7_10_13_Group_MID--AUDIO_12_R3_2013_wav--2",
+      "title": "Franz Schubert - Sonata in A Major, Op. 120, I. Allegro moderato",
+      "dur_min": 5.663211039066667,
+      "fast_repeats": 0,
+      "density_per_min": 0.0,
+      "clean_f1": 0.9651162790697675,
+      "sbc_f1": 0.9635382955771304,
+      "codec_drop": 0.0015779834926370473
+    },
+    {
+      "file": "MIDI-Unprocessed_083_PIANO083_MID--AUDIO-split_07-09-17_Piano-e_2_-06_wav--3",
+      "title": "Franz Schubert - Sonata in A Minor, D. 537, I. Allegro ma non troppo",
+      "dur_min": 5.1431906102,
+      "fast_repeats": 53,
+      "density_per_min": 10.304887377669836,
+      "clean_f1": 0.9671611935322554,
+      "sbc_f1": 0.9607613958924696,
+      "codec_drop": 0.00639979763978582
+    },
+    {
+      "file": "MIDI-Unprocessed_16_R2_2009_01_ORIG_MID--AUDIO_16_R2_2009_16_R2_2009_01_WAV",
+      "title": "Franz Schubert - Sonata in C Major, D840",
+      "dur_min": 11.73761290625,
+      "fast_repeats": 445,
+      "density_per_min": 37.91230836749166,
+      "clean_f1": 0.961723372781065,
+      "sbc_f1": 0.9567552551162144,
+      "codec_drop": 0.004968117664850613
+    },
+    {
+      "file": "MIDI-Unprocessed_16_R2_2009_01_ORIG_MID--AUDIO_16_R2_2009_16_R2_2009_02_WAV",
+      "title": "Franz Schubert - Sonata in C Major, D841",
+      "dur_min": 9.005755773433332,
+      "fast_repeats": 97,
+      "density_per_min": 10.770889466728228,
+      "clean_f1": 0.9665480427046264,
+      "sbc_f1": 0.9632269099201825,
+      "codec_drop": 0.003321132784443903
+    },
+    {
+      "file": "MIDI-Unprocessed_16_R2_2009_01_ORIG_MID--AUDIO_16_R2_2009_16_R2_2009_04_WAV",
+      "title": "Franz Schubert - Sonata in C Major, D843",
+      "dur_min": 8.823575578133333,
+      "fast_repeats": 1088,
+      "density_per_min": 123.30602150632582,
+      "clean_f1": 0.9626168224299065,
+      "sbc_f1": 0.9561159097241572,
+      "codec_drop": 0.006500912705749373
+    },
+    {
+      "file": "MIDI-Unprocessed_03_R1_2009_03-08_ORIG_MID--AUDIO_03_R1_2009_03_R1_2009_03_WAV",
+      "title": "Franz Schubert - Valse-Caprice No. 6 from Soirees de Vienne",
+      "dur_min": 7.371275570316667,
+      "fast_repeats": 184,
+      "density_per_min": 24.96175841545637,
+      "clean_f1": 0.971991933676899,
+      "sbc_f1": 0.9682343697384667,
+      "codec_drop": 0.0037575639384322956
+    },
+    {
+      "file": "MIDI-Unprocessed_10_R1_2006_01-04_ORIG_MID--AUDIO_10_R1_2006_03_Track03_wav",
+      "title": "Franz Schubert - Wanderer Fantasy",
+      "dur_min": 21.050571007833334,
+      "fast_repeats": 704,
+      "density_per_min": 33.443273331541825,
+      "clean_f1": 0.9691140874616749,
+      "sbc_f1": 0.9634130575307046,
+      "codec_drop": 0.005701029930970325
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital9-11_MID--AUDIO_09_R1_2018_wav--2",
+      "title": "Franz Schubert / Franz Liszt - Gretchen am Spinnrade",
+      "dur_min": 3.318929195316667,
+      "fast_repeats": 25,
+      "density_per_min": 7.532549966801774,
+      "clean_f1": 0.9540140296180827,
+      "sbc_f1": 0.9436976427040717,
+      "codec_drop": 0.010316386914010933
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_18_R1_2004_01-02_ORIG_MID--AUDIO_18_R1_2004_03_Track03_wav",
+      "title": "Franz Schubert / Franz Liszt - Song Transcriptions: Aufenthalt, Gretchen am Spinnrade, Standchen von Shakespeare, Der Erlkonig",
+      "dur_min": 3.1653574712833334,
+      "fast_repeats": 19,
+      "density_per_min": 6.002481606697273,
+      "clean_f1": 0.9452505320177984,
+      "sbc_f1": 0.939949797258158,
+      "codec_drop": 0.005300734759640435
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_18_R1_2004_01-02_ORIG_MID--AUDIO_18_R1_2004_05_Track05_wav",
+      "title": "Franz Schubert / Franz Liszt - Song Transcriptions: Aufenthalt, Gretchen am Spinnrade, Standchen von Shakespeare, Der Erlkonig",
+      "dur_min": 4.151893022533334,
+      "fast_repeats": 1661,
+      "density_per_min": 400.05847717784366,
+      "clean_f1": 0.8893673005621336,
+      "sbc_f1": 0.8757823784304285,
+      "codec_drop": 0.013584922131705146
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_05_R1_2015_wav--4",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Etude Op. 10 No. 12",
+      "dur_min": 2.5804340277833333,
+      "fast_repeats": 70,
+      "density_per_min": 27.127219392674032,
+      "clean_f1": 0.9825317061497966,
+      "sbc_f1": 0.975703632427231,
+      "codec_drop": 0.006828073722565553
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--6",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Etude Op. 10 No. 12",
+      "dur_min": 2.26890625,
+      "fast_repeats": 102,
+      "density_per_min": 44.95558157151711,
+      "clean_f1": 0.9736084452975049,
+      "sbc_f1": 0.9657170449058425,
+      "codec_drop": 0.007891400391662362
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_11_R1_2015_wav--3",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Etude Op. 10 No. 12",
+      "dur_min": 2.5082291666666667,
+      "fast_repeats": 90,
+      "density_per_min": 35.88188878275676,
+      "clean_f1": 0.9783823172212777,
+      "sbc_f1": 0.9748964172556666,
+      "codec_drop": 0.0034858999656111056
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D2-21-22_mid--AUDIO-from_mp3_22_R1_2015_wav--3",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Etude Op. 10 No. 12",
+      "dur_min": 2.6272743055500003,
+      "fast_repeats": 87,
+      "density_per_min": 33.114166958591404,
+      "clean_f1": 0.9816971713810316,
+      "sbc_f1": 0.9782971619365609,
+      "codec_drop": 0.0034000094444707196
+    },
+    {
+      "file": "MIDI-Unprocessed_07_R1_2011_MID--AUDIO_R1-D3_03_Track03_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Etude Op. 10 No. 12 in C Minor",
+      "dur_min": 2.3015691015666664,
+      "fast_repeats": 100,
+      "density_per_min": 43.448619436162275,
+      "clean_f1": 0.9654178674351587,
+      "sbc_f1": 0.9581126624939816,
+      "codec_drop": 0.007305204941177035
+    },
+    {
+      "file": "MIDI-Unprocessed_24_R1_2011_MID--AUDIO_R1-D9_11_Track11_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Etudes Op. 10 Nos. 9",
+      "dur_min": 2.0801483828166667,
+      "fast_repeats": 17,
+      "density_per_min": 8.172493914583539,
+      "clean_f1": 0.983159582999198,
+      "sbc_f1": 0.9767255216693419,
+      "codec_drop": 0.006434061329856133
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_12_R1_2015_wav--3",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Nocturne Op. 15 No. 1 in F Major",
+      "dur_min": 4.007517361116666,
+      "fast_repeats": 13,
+      "density_per_min": 3.243903601300343,
+      "clean_f1": 0.9737891737891737,
+      "sbc_f1": 0.9722619388046898,
+      "codec_drop": 0.0015272349844839272
+    },
+    {
+      "file": "MIDI-Unprocessed_22_R2_2011_MID--AUDIO_R2-D5_10_Track10_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Nocturne Op. 27 No. 1 in C-sharp Minor",
+      "dur_min": 4.886947570316667,
+      "fast_repeats": 58,
+      "density_per_min": 11.868349141351988,
+      "clean_f1": 0.9828220858895705,
+      "sbc_f1": 0.9767156862745098,
+      "codec_drop": 0.006106399615060765
+    },
+    {
+      "file": "MIDI-Unprocessed_02_R1_2009_03-06_ORIG_MID--AUDIO_02_R1_2009_02_R1_2009_03_WAV",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Nocturne in B Major, Op. 9, No. 3",
+      "dur_min": 5.78195646875,
+      "fast_repeats": 22,
+      "density_per_min": 3.804940441683432,
+      "clean_f1": 0.9824185248713551,
+      "sbc_f1": 0.9759036144578312,
+      "codec_drop": 0.006514910413523811
+    },
+    {
+      "file": "MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_03_R1_2014_wav--4",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Nocturne in B Major, Op. 9, No. 3",
+      "dur_min": 5.881916304683333,
+      "fast_repeats": 24,
+      "density_per_min": 4.0803028735534,
+      "clean_f1": 0.9770797962648556,
+      "sbc_f1": 0.9761904761904762,
+      "codec_drop": 0.0008893200743794738
+    },
+    {
+      "file": "MIDI-Unprocessed_057_PIANO057_MID--AUDIO-split_07-07-17_Piano-e_1-07_wav--3",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Nocturne in C-sharp Minor, Op. 27 No. 1",
+      "dur_min": 5.044847075000001,
+      "fast_repeats": 65,
+      "density_per_min": 12.884434162952301,
+      "clean_f1": 0.9892608970309539,
+      "sbc_f1": 0.98448876226654,
+      "codec_drop": 0.004772134764413849
+    },
+    {
+      "file": "MIDI-Unprocessed_17_R2_2008_01-04_ORIG_MID--AUDIO_17_R2_2008_wav--1",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Nocturne in F-sharp Major, Op. 15, No. 2",
+      "dur_min": 3.8345091640666666,
+      "fast_repeats": 13,
+      "density_per_min": 3.3902644233644037,
+      "clean_f1": 0.9776186213070724,
+      "sbc_f1": 0.9753252579632122,
+      "codec_drop": 0.002293363343860211
+    },
+    {
+      "file": "MIDI-Unprocessed_09_R2_2008_01-05_ORIG_MID--AUDIO_09_R2_2008_wav--3",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise Op. 26 in E-flat Minor",
+      "dur_min": 7.061624882816667,
+      "fast_repeats": 755,
+      "density_per_min": 106.91590285929398,
+      "clean_f1": 0.9506104938950609,
+      "sbc_f1": 0.9399778516057586,
+      "codec_drop": 0.010632642289302274
+    },
+    {
+      "file": "MIDI-Unprocessed_15_R1_2006_01-05_ORIG_MID--AUDIO_15_R1_2006_02_Track02_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise Op. 44",
+      "dur_min": 11.033442492183333,
+      "fast_repeats": 693,
+      "density_per_min": 62.80904626919091,
+      "clean_f1": 0.9633088725817212,
+      "sbc_f1": 0.9543507362784471,
+      "codec_drop": 0.008958136303274022
+    },
+    {
+      "file": "ORIG-MIDI_03_7_8_13_Group__MID--AUDIO_19_R2_2013_wav--4",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise Op. 53 in A-flat Major",
+      "dur_min": 7.60211134375,
+      "fast_repeats": 368,
+      "density_per_min": 48.40760459297239,
+      "clean_f1": 0.949098532494759,
+      "sbc_f1": 0.9437309901993917,
+      "codec_drop": 0.005367542295367289
+    },
+    {
+      "file": "MIDI-Unprocessed_22_R2_2011_MID--AUDIO_R2-D5_11_Track11_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise Op. 53 in A-flat Major",
+      "dur_min": 6.332191851566666,
+      "fast_repeats": 481,
+      "density_per_min": 75.961059183795,
+      "clean_f1": 0.9408748862978583,
+      "sbc_f1": 0.9325347308876133,
+      "codec_drop": 0.00834015541024502
+    },
+    {
+      "file": "MIDI-Unprocessed_17_R1_2006_01-06_ORIG_MID--AUDIO_17_R1_2006_02_Track02_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise-Fantasie",
+      "dur_min": 12.98360525,
+      "fast_repeats": 400,
+      "density_per_min": 30.808083910283703,
+      "clean_f1": 0.9623504856707072,
+      "sbc_f1": 0.95506339271385,
+      "codec_drop": 0.007287092956857255
+    },
+    {
+      "file": "MIDI-Unprocessed_12_R1_2008_01-04_ORIG_MID--AUDIO_12_R1_2008_wav--4",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise-Fantasie Op. 61",
+      "dur_min": 11.076355554683333,
+      "fast_repeats": 220,
+      "density_per_min": 19.862128740258708,
+      "clean_f1": 0.9594320486815416,
+      "sbc_f1": 0.954814689456761,
+      "codec_drop": 0.004617359224780682
+    },
+    {
+      "file": "MIDI-Unprocessed_01_R1_2009_01-04_ORIG_MID--AUDIO_01_R1_2009_01_R1_2009_04_WAV",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise-Fantasie, Op. 61",
+      "dur_min": 12.025606742183333,
+      "fast_repeats": 469,
+      "density_per_min": 39.00011118398253,
+      "clean_f1": 0.95715206185567,
+      "sbc_f1": 0.9486121226834991,
+      "codec_drop": 0.008539939172170885
+    },
+    {
+      "file": "MIDI-Unprocessed_07_R1_2009_01-03_ORIG_MID--AUDIO_07_R1_2009_07_R1_2009_03_WAV",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Polonaise-Fantasie, Op. 61",
+      "dur_min": 12.989993242183335,
+      "fast_repeats": 342,
+      "density_per_min": 26.327958269400703,
+      "clean_f1": 0.957260845160773,
+      "sbc_f1": 0.9475122578570855,
+      "codec_drop": 0.00974858730368755
+    },
+    {
+      "file": "MIDI-Unprocessed_19_R1_2011_MID--AUDIO_R1-D7_15_Track15_wav",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Rondo in C Minor, Op. 1",
+      "dur_min": 10.179966671866667,
+      "fast_repeats": 193,
+      "density_per_min": 18.95880470152956,
+      "clean_f1": 0.9829728485964105,
+      "sbc_f1": 0.978390804597701,
+      "codec_drop": 0.00458204399870954
+    },
+    {
+      "file": "ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_04_R1_2013_wav--4",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Rondo in C minor, Op. 1",
+      "dur_min": 8.274697921883334,
+      "fast_repeats": 212,
+      "density_per_min": 25.62027061306287,
+      "clean_f1": 0.9772998805256871,
+      "sbc_f1": 0.9705152934692753,
+      "codec_drop": 0.006784587056411717
+    },
+    {
+      "file": "ORIG-MIDI_02_7_10_13_Group_MID--AUDIO_14_R3_2013_wav--2",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Sonata No. 2 in B-flat Minor, Op. 35",
+      "dur_min": 18.7875524375,
+      "fast_repeats": 917,
+      "density_per_min": 48.808912339729034,
+      "clean_f1": 0.9570774678296917,
+      "sbc_f1": 0.10414163262036369,
+      "codec_drop": 0.852935835209328
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D2-13-20_mid--AUDIO-from_mp3_15_R1_2015_wav--4",
+      "title": "Fr\u00e9d\u00e9ric Chopin - Valse brillante No. 1 in A-flat Major, Op. 34",
+      "dur_min": 5.0765625,
+      "fast_repeats": 195,
+      "density_per_min": 38.41181902123731,
+      "clean_f1": 0.9657611771363894,
+      "sbc_f1": 0.9593611863681735,
+      "codec_drop": 0.006399990768215957
+    },
+    {
+      "file": "ORIG-MIDI_01_7_10_13_Group_MID--AUDIO_07_R3_2013_wav--1",
+      "title": "Johann Sebastian Bach - Overture in the French Style in B Minor, BWV 831",
+      "dur_min": 7.380445789066667,
+      "fast_repeats": 73,
+      "density_per_min": 9.891001449823209,
+      "clean_f1": 0.9949409780775716,
+      "sbc_f1": 0.9911260709914321,
+      "codec_drop": 0.0038149070861395185
+    },
+    {
+      "file": "MIDI-Unprocessed_11_R1_2011_MID--AUDIO_R1-D4_07_Track07_wav",
+      "title": "Johann Sebastian Bach - Prelude and Fuge in G-sharp Minor, WTC I, BWV 863",
+      "dur_min": 4.9585954687500005,
+      "fast_repeats": 0,
+      "density_per_min": 0.0,
+      "clean_f1": 0.9974368363236911,
+      "sbc_f1": 0.9927060539752006,
+      "codec_drop": 0.004730782348490448
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_02_R1_2015_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in  F-sharp Major, WTC I , BWV 858",
+      "dur_min": 3.7889236111166666,
+      "fast_repeats": 26,
+      "density_per_min": 6.862107202086693,
+      "clean_f1": 0.997716894977169,
+      "sbc_f1": 0.9961919268849961,
+      "codec_drop": 0.0015249680921728404
+    },
+    {
+      "file": "MIDI-Unprocessed_13_R1_2008_01-04_ORIG_MID--AUDIO_13_R1_2008_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in A-flat Major, WTC I",
+      "dur_min": 3.8425664921833333,
+      "fast_repeats": 13,
+      "density_per_min": 3.383155509851293,
+      "clean_f1": 0.9931751706207345,
+      "sbc_f1": 0.9938171168239505,
+      "codec_drop": -0.0006419462032160039
+    },
+    {
+      "file": "ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_04_R1_2013_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in A-flat Major, WTC I, BWV 862",
+      "dur_min": 3.4699039375,
+      "fast_repeats": 6,
+      "density_per_min": 1.7291544976668394,
+      "clean_f1": 0.9948519948519948,
+      "sbc_f1": 0.9938887101962046,
+      "codec_drop": 0.0009632846557902086
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_03_R1_2004_01-02_ORIG_MID--AUDIO_03_R1_2004_01_Track01_wav",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in B-Moll, No. 22 WTKII",
+      "dur_min": 7.00749357285,
+      "fast_repeats": 6,
+      "density_per_min": 0.8562262580227749,
+      "clean_f1": 0.9944672496876673,
+      "sbc_f1": 0.9919771795328934,
+      "codec_drop": 0.0024900701547738713
+    },
+    {
+      "file": "MIDI-Unprocessed_03_R1_2008_01-04_ORIG_MID--AUDIO_03_R1_2008_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in B-flat Minor, WTC II",
+      "dur_min": 6.008897125,
+      "fast_repeats": 10,
+      "density_per_min": 1.6641989023900954,
+      "clean_f1": 0.9947305796362399,
+      "sbc_f1": 0.9927032071949771,
+      "codec_drop": 0.0020273724412628313
+    },
+    {
+      "file": "MIDI-Unprocessed_11_R3_2008_01-04_ORIG_MID--AUDIO_11_R3_2008_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in C-sharp Minor, WTC II",
+      "dur_min": 6.358968,
+      "fast_repeats": 30,
+      "density_per_min": 4.717746653230524,
+      "clean_f1": 0.9871418074944893,
+      "sbc_f1": 0.9838709677419355,
+      "codec_drop": 0.0032708397525538224
+    },
+    {
+      "file": "MIDI-Unprocessed_18_R1_2011_MID--AUDIO_R1-D7_07_Track07_wav",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in D Major, WTC I, BWV 850",
+      "dur_min": 2.9140150703166667,
+      "fast_repeats": 8,
+      "density_per_min": 2.745352994736104,
+      "clean_f1": 0.9969869434214931,
+      "sbc_f1": 0.9939879759519039,
+      "codec_drop": 0.0029989674695891644
+    },
+    {
+      "file": "MIDI-Unprocessed_053_PIANO053_MID--AUDIO-split_07-06-17_Piano-e_3-04_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in D Major, WTC I, BWV 850",
+      "dur_min": 3.47704848945,
+      "fast_repeats": 3,
+      "density_per_min": 0.8628007372064403,
+      "clean_f1": 0.9960291197882197,
+      "sbc_f1": 0.9940515532055519,
+      "codec_drop": 0.001977566582667789
+    },
+    {
+      "file": "MIDI-Unprocessed_14_R1_2008_01-05_ORIG_MID--AUDIO_14_R1_2008_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in D major, WTC I",
+      "dur_min": 3.840763609366667,
+      "fast_repeats": 11,
+      "density_per_min": 2.8640138052687587,
+      "clean_f1": 0.9900607399226946,
+      "sbc_f1": 0.988404196576477,
+      "codec_drop": 0.001656543346217565
+    },
+    {
+      "file": "ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in D-sharp Minor, WTC II, BWV 877",
+      "dur_min": 6.477179242183333,
+      "fast_repeats": 0,
+      "density_per_min": 0.0,
+      "clean_f1": 0.9965052421367948,
+      "sbc_f1": 0.9940209267563527,
+      "codec_drop": 0.002484315380442137
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_11_R1_2015_wav--2",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in E Minor WTC I, BWV 855",
+      "dur_min": 3.36444444445,
+      "fast_repeats": 11,
+      "density_per_min": 3.2694848084490267,
+      "clean_f1": 0.9970267591674925,
+      "sbc_f1": 0.9962825278810409,
+      "codec_drop": 0.0007442312864516243
+    },
+    {
+      "file": "MIDI-Unprocessed_07_R1_2011_MID--AUDIO_R1-D3_02_Track02_wav",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in F-sharp Major, WTC I, BWV 858",
+      "dur_min": 3.65054834375,
+      "fast_repeats": 54,
+      "density_per_min": 14.792298283750128,
+      "clean_f1": 0.9945195469492144,
+      "sbc_f1": 0.9912600145666425,
+      "codec_drop": 0.003259532382571928
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_07_R1_2015_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in G-sharp Minor, WTC I, BWV 863",
+      "dur_min": 4.5899479166666675,
+      "fast_repeats": 3,
+      "density_per_min": 0.6536021877517673,
+      "clean_f1": 0.9948148148148148,
+      "sbc_f1": 0.992955135335558,
+      "codec_drop": 0.0018596794792568039
+    },
+    {
+      "file": "ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_03_R1_2013_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in G-sharp Minor, WTC I, BWV 863",
+      "dur_min": 4.488710789066667,
+      "fast_repeats": 1,
+      "density_per_min": 0.22278111622511748,
+      "clean_f1": 0.9944710652414303,
+      "sbc_f1": 0.993006993006993,
+      "codec_drop": 0.0014640722344372303
+    },
+    {
+      "file": "MIDI-Unprocessed_056_PIANO056_MID--AUDIO-split_07-07-17_Piano-e_1-05_wav--1",
+      "title": "Johann Sebastian Bach - Prelude and Fugue in G-sharp Minor, WTC I, BWV 863",
+      "dur_min": 4.473411128616666,
+      "fast_repeats": 0,
+      "density_per_min": 0.0,
+      "clean_f1": 0.9956108266276518,
+      "sbc_f1": 0.9937888198757765,
+      "codec_drop": 0.0018220067518752714
+    },
+    {
+      "file": "MIDI-Unprocessed_15_R1_2009_01-02_ORIG_MID--AUDIO_15_R1_2009_15_R1_2009_02_WAV",
+      "title": "Johannes Brahms - Sonata 2 F-sharp Minor, Op. 2",
+      "dur_min": 24.08998659383333,
+      "fast_repeats": 873,
+      "density_per_min": 36.23912352958614,
+      "clean_f1": 0.9664563013960604,
+      "sbc_f1": 0.958552202752962,
+      "codec_drop": 0.007904098643098378
+    },
+    {
+      "file": "MIDI-Unprocessed_04_R1_2011_MID--AUDIO_R1-D2_03_Track03_wav",
+      "title": "Joseph Haydn - Sonata E-Flat Major, Hob. XVI:49, First Movement",
+      "dur_min": 4.970547914066667,
+      "fast_repeats": 54,
+      "density_per_min": 10.863993453755837,
+      "clean_f1": 0.995603135155802,
+      "sbc_f1": 0.9946544482626957,
+      "codec_drop": 0.000948686893106343
+    },
+    {
+      "file": "MIDI-Unprocessed_12_R1_2008_01-04_ORIG_MID--AUDIO_12_R1_2008_wav--1",
+      "title": "Joseph Haydn - Sonata in C Minor, First Movement",
+      "dur_min": 5.008675546866667,
+      "fast_repeats": 46,
+      "density_per_min": 9.18406464335202,
+      "clean_f1": 0.9905913978494624,
+      "sbc_f1": 0.9872340425531915,
+      "codec_drop": 0.003357355296270903
+    },
+    {
+      "file": "ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_14_R1_2013_wav--2",
+      "title": "Joseph Haydn - Sonata in C Minor, Hob. XVI:20, 1st mov.",
+      "dur_min": 5.292373625,
+      "fast_repeats": 95,
+      "density_per_min": 17.950357765982556,
+      "clean_f1": 0.9924812030075189,
+      "sbc_f1": 0.9916040653999116,
+      "codec_drop": 0.0008771376076072146
+    },
+    {
+      "file": "ORIG-MIDI_02_7_7_13_Group__MID--AUDIO_19_R1_2013_wav--2",
+      "title": "Joseph Haydn - Sonata in C Minor, Hob. XVI:20, 1st mov.",
+      "dur_min": 5.3751281718833335,
+      "fast_repeats": 58,
+      "density_per_min": 10.790440366313721,
+      "clean_f1": 0.9944653531104715,
+      "sbc_f1": 0.9933569530558015,
+      "codec_drop": 0.0011084000546699446
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_19_R1_2004_01-02_ORIG_MID--AUDIO_19_R1_2004_02_Track02_wav",
+      "title": "Joseph Haydn - Sonata in D Major, Hob. XVI:24",
+      "dur_min": 4.536275791733333,
+      "fast_repeats": 24,
+      "density_per_min": 5.290683614020188,
+      "clean_f1": 0.9937460913070669,
+      "sbc_f1": 0.9912663755458514,
+      "codec_drop": 0.0024797157612155285
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_04_R1_2015_wav--2",
+      "title": "Joseph Haydn - Sonata in E flat Major, Hob. XVI: 49, I. Allegro",
+      "dur_min": 4.986579861116667,
+      "fast_repeats": 56,
+      "density_per_min": 11.23014201309907,
+      "clean_f1": 0.9957999236349752,
+      "sbc_f1": 0.9944624785182357,
+      "codec_drop": 0.0013374451167394996
+    },
+    {
+      "file": "MIDI-Unprocessed_05_R1_2011_MID--AUDIO_R1-D2_10_Track10_wav",
+      "title": "Joseph Haydn - Sonata in G Major, Hob. XVI:6, First Movement",
+      "dur_min": 3.1151366640666667,
+      "fast_repeats": 155,
+      "density_per_min": 49.75704654885178,
+      "clean_f1": 0.9867861142217246,
+      "sbc_f1": 0.9827547592385217,
+      "codec_drop": 0.0040313549832028395
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital13-15_MID--AUDIO_14_R1_2018_wav--3",
+      "title": "Ludwig van Beethoven - Rondo a capriccioso \"Rage over a Lost Penny\", Op. 129",
+      "dur_min": 5.995742757816667,
+      "fast_repeats": 131,
+      "density_per_min": 21.848835964354027,
+      "clean_f1": 0.9700027024592379,
+      "sbc_f1": 0.9637342908438061,
+      "codec_drop": 0.00626841161543179
+    },
+    {
+      "file": "MIDI-UNPROCESSED_14-15_R1_2014_MID--AUDIO_15_R1_2014_wav--2",
+      "title": "Ludwig van Beethoven - Rondo, Op. 129",
+      "dur_min": 5.6390613125,
+      "fast_repeats": 267,
+      "density_per_min": 47.34830589767594,
+      "clean_f1": 0.9430999445778682,
+      "sbc_f1": 0.9319992588475079,
+      "codec_drop": 0.011100685730360271
+    },
+    {
+      "file": "MIDI-Unprocessed_09_R1_2011_MID--AUDIO_R1-D3_13_Track13_wav",
+      "title": "Ludwig van Beethoven - Sonata No. 10 in G Major, Op. 14 No. 2, First Movement",
+      "dur_min": 4.649011554683333,
+      "fast_repeats": 49,
+      "density_per_min": 10.539874858051979,
+      "clean_f1": 0.9862642677500484,
+      "sbc_f1": 0.9834168916313152,
+      "codec_drop": 0.0028473761187332025
+    },
+    {
+      "file": "MIDI-Unprocessed_06_R1_2008_01-04_ORIG_MID--AUDIO_06_R1_2008_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 12 in A-flat Major, Op. 26, First Movement",
+      "dur_min": 6.7604989375,
+      "fast_repeats": 25,
+      "density_per_min": 3.6979519161413963,
+      "clean_f1": 0.9620051085568327,
+      "sbc_f1": 0.955952760932014,
+      "codec_drop": 0.006052347624818766
+    },
+    {
+      "file": "MIDI-Unprocessed_044_PIANO044_MID--AUDIO-split_07-06-17_Piano-e_1-04_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 15 in D Major, Op. 28, I. Allegro",
+      "dur_min": 7.57895146695,
+      "fast_repeats": 2,
+      "density_per_min": 0.2638887461836275,
+      "clean_f1": 0.9772402132917154,
+      "sbc_f1": 0.9726704841228528,
+      "codec_drop": 0.004569729168862557
+    },
+    {
+      "file": "MIDI-Unprocessed_046_PIANO046_MID--AUDIO-split_07-06-17_Piano-e_2-02_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 16 Op. 31 No. 1 in G Major, I. Allegro vivace",
+      "dur_min": 4.690735562283334,
+      "fast_repeats": 86,
+      "density_per_min": 18.334011554924945,
+      "clean_f1": 0.9735449735449735,
+      "sbc_f1": 0.9706293706293706,
+      "codec_drop": 0.0029156029156028884
+    },
+    {
+      "file": "MIDI-Unprocessed_049_PIANO049_MID--AUDIO-split_07-06-17_Piano-e_2-06_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 16 Op. 31 No. 1 in G Major, I. Allegro vivace",
+      "dur_min": 5.101737821866666,
+      "fast_repeats": 79,
+      "density_per_min": 15.484919601590743,
+      "clean_f1": 0.9888109801581382,
+      "sbc_f1": 0.9877830750893922,
+      "codec_drop": 0.001027905068745949
+    },
+    {
+      "file": "MIDI-Unprocessed_05_R1_2008_01-04_ORIG_MID--AUDIO_05_R1_2008_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 16 in G Major, Op. 31 No. 1, First Movement",
+      "dur_min": 4.7301857968666665,
+      "fast_repeats": 83,
+      "density_per_min": 17.546879459783636,
+      "clean_f1": 0.9735079171741778,
+      "sbc_f1": 0.9678007290400973,
+      "codec_drop": 0.005707188134080554
+    },
+    {
+      "file": "MIDI-Unprocessed_17_R1_2008_01-04_ORIG_MID--AUDIO_17_R1_2008_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 16 in G Major, Op. 31 No. 1, First movement",
+      "dur_min": 4.626308585933333,
+      "fast_repeats": 77,
+      "density_per_min": 16.643939454044368,
+      "clean_f1": 0.9602228757158333,
+      "sbc_f1": 0.9537037037037037,
+      "codec_drop": 0.006519172012129593
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 16 in G Major, Op. 31 No. 1, I. and II. ",
+      "dur_min": 14.607013888883333,
+      "fast_repeats": 353,
+      "density_per_min": 24.166472537460283,
+      "clean_f1": 0.9902066089593733,
+      "sbc_f1": 0.9881712948320577,
+      "codec_drop": 0.002035314127315613
+    },
+    {
+      "file": "MIDI-Unprocessed_09_R1_2008_01-05_ORIG_MID--AUDIO_09_R1_2008_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 18 in E-flat Major, Op. 31 No. 3, First Movement",
+      "dur_min": 5.861172023433334,
+      "fast_repeats": 114,
+      "density_per_min": 19.450034829931766,
+      "clean_f1": 0.9820955939592091,
+      "sbc_f1": 0.9797885572139303,
+      "codec_drop": 0.0023070367452787677
+    },
+    {
+      "file": "MIDI-Unprocessed_18_R1_2008_01-04_ORIG_MID--AUDIO_18_R1_2008_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 18 in E-flat Major, Op. 31 No. 3, First Movement",
+      "dur_min": 5.872456734383333,
+      "fast_repeats": 128,
+      "density_per_min": 21.796669739694774,
+      "clean_f1": 0.9818523153942428,
+      "sbc_f1": 0.9754725824089986,
+      "codec_drop": 0.006379732985244191
+    },
+    {
+      "file": "MIDI-Unprocessed_066_PIANO066_MID--AUDIO-split_07-07-17_Piano-e_3-02_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 18, Op. 31 No. 3 in E-flat Major, I. Allegro",
+      "dur_min": 5.887417732716667,
+      "fast_repeats": 86,
+      "density_per_min": 14.607422796261561,
+      "clean_f1": 0.9896493125289664,
+      "sbc_f1": 0.9877879115782966,
+      "codec_drop": 0.0018614009506697782
+    },
+    {
+      "file": "MIDI-Unprocessed_10_R1_2008_01-04_ORIG_MID--AUDIO_10_R1_2008_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 3 in C Major, Op. 2 No. 3, First Movement",
+      "dur_min": 7.167727875,
+      "fast_repeats": 111,
+      "density_per_min": 15.486078982874332,
+      "clean_f1": 0.9719734852889871,
+      "sbc_f1": 0.9621721977256903,
+      "codec_drop": 0.00980128756329679
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_05_R1_2015_wav--3",
+      "title": "Ludwig van Beethoven - Sonata No. 3 in C Major, Op. 2 No. 3, I. Allegro con brio",
+      "dur_min": 7.428020833333333,
+      "fast_repeats": 159,
+      "density_per_min": 21.405432694330308,
+      "clean_f1": 0.9891077636152955,
+      "sbc_f1": 0.9866666666666666,
+      "codec_drop": 0.002441096948628929
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_09_R1_2015_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 3 in C Major, Op. 2 No. 3, I. and II. ",
+      "dur_min": 14.906770833333333,
+      "fast_repeats": 82,
+      "density_per_min": 5.500856014814297,
+      "clean_f1": 0.9870152354570637,
+      "sbc_f1": 0.9838221299420365,
+      "codec_drop": 0.0031931055150271614
+    },
+    {
+      "file": "MIDI-Unprocessed_065_PIANO065_MID--AUDIO-split_07-07-17_Piano-e_3-01_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 3, Op. 2 No. 3 in C major, I. Allegro con brio",
+      "dur_min": 7.50258075855,
+      "fast_repeats": 85,
+      "density_per_min": 11.329434861881804,
+      "clean_f1": 0.9914168136390359,
+      "sbc_f1": 0.9880309786435109,
+      "codec_drop": 0.0033858349955250278
+    },
+    {
+      "file": "MIDI-Unprocessed_23_R1_2011_MID--AUDIO_R1-D9_03_Track03_wav",
+      "title": "Ludwig van Beethoven - Sonata No. 5 in C Minor, Op. 10 No. 1, First Movement",
+      "dur_min": 4.525146828116666,
+      "fast_repeats": 26,
+      "density_per_min": 5.7456699169297485,
+      "clean_f1": 0.9880895664602192,
+      "sbc_f1": 0.9847691575440267,
+      "codec_drop": 0.003320408916192452
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D2-13-20_mid--AUDIO-from_mp3_16_R1_2015_wav--2",
+      "title": "Ludwig van Beethoven - Sonata No. 5 in C Minor, Op. 10 No. 1, I. Allegro molto e con brio",
+      "dur_min": 3.9340277777833332,
+      "fast_repeats": 30,
+      "density_per_min": 7.625772285955692,
+      "clean_f1": 0.9933491686460808,
+      "sbc_f1": 0.9900237529691212,
+      "codec_drop": 0.0033254156769596532
+    },
+    {
+      "file": "MIDI-Unprocessed_09_R1_2009_01-04_ORIG_MID--AUDIO_09_R1_2009_09_R1_2009_03_WAV",
+      "title": "Ludwig van Beethoven - Sonata No. 8 in C Minor, Op.13",
+      "dur_min": 15.358313523433333,
+      "fast_repeats": 206,
+      "density_per_min": 13.41293102824671,
+      "clean_f1": 0.9627586206896551,
+      "sbc_f1": 0.9571111511007138,
+      "codec_drop": 0.005647469588941356
+    },
+    {
+      "file": "ORIG-MIDI_02_7_7_13_Group__MID--AUDIO_16_R1_2013_wav--2",
+      "title": "Ludwig van Beethoven - Sonata in C Major, Op. 2 No. 3, 1st mov.",
+      "dur_min": 7.049494375,
+      "fast_repeats": 132,
+      "density_per_min": 18.724747191531733,
+      "clean_f1": 0.9723808413937769,
+      "sbc_f1": 0.9660780669144982,
+      "codec_drop": 0.006302774479278739
+    },
+    {
+      "file": "MIDI-Unprocessed_17_R1_2009_01-03_ORIG_MID--AUDIO_17_R1_2009_17_R1_2009_01_WAV",
+      "title": "Ludwig van Beethoven - Sonata in E Major, Op. 14, No. 1",
+      "dur_min": 12.562331632816667,
+      "fast_repeats": 49,
+      "density_per_min": 3.900549789021407,
+      "clean_f1": 0.9729203539823008,
+      "sbc_f1": 0.9713830069992025,
+      "codec_drop": 0.0015373469830982645
+    },
+    {
+      "file": "MIDI-Unprocessed_16_R1_2006_01-04_ORIG_MID--AUDIO_16_R1_2006_02_Track02_wav",
+      "title": "Richard Wagner / Franz Liszt - IsoldasLiebestod",
+      "dur_min": 8.438248328133334,
+      "fast_repeats": 403,
+      "density_per_min": 47.75872720602305,
+      "clean_f1": 0.9197701149425287,
+      "sbc_f1": 0.9080967892042812,
+      "codec_drop": 0.01167332573824753
+    },
+    {
+      "file": "MIDI-Unprocessed_17_R1_2009_01-03_ORIG_MID--AUDIO_17_R1_2009_17_R1_2009_02_WAV",
+      "title": "Richard Wagner / Franz Liszt - Isolde's Liebestod",
+      "dur_min": 7.179591289066667,
+      "fast_repeats": 189,
+      "density_per_min": 26.32461826731221,
+      "clean_f1": 0.9346793349168646,
+      "sbc_f1": 0.9216644807440085,
+      "codec_drop": 0.013014854172856083
+    },
+    {
+      "file": "MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_02_R1_2014_wav--4",
+      "title": "Robert Schumann - Ges\u00e4nge der Fr\u00fche, Op. 133",
+      "dur_min": 10.633336054683333,
+      "fast_repeats": 451,
+      "density_per_min": 42.413782248644544,
+      "clean_f1": 0.9583033788641265,
+      "sbc_f1": 0.9578123594494918,
+      "codec_drop": 0.0004910194146346969
+    },
+    {
+      "file": "MIDI-Unprocessed_23_R3_2011_MID--AUDIO_R3-D8_04_Track04_wav",
+      "title": "Robert Schumann - Romances Op. 28, Nos. 2 and 3",
+      "dur_min": 7.310244648433334,
+      "fast_repeats": 27,
+      "density_per_min": 3.6934468404947842,
+      "clean_f1": 0.9718977680120273,
+      "sbc_f1": 0.9657399930787864,
+      "codec_drop": 0.006157774933240878
+    },
+    {
+      "file": "MIDI-Unprocessed_06_R1_2006_01-04_ORIG_MID--AUDIO_06_R1_2006_02_Track02_wav",
+      "title": "Robert Schumann - Toccata Op. 7",
+      "dur_min": 5.190499617183334,
+      "fast_repeats": 282,
+      "density_per_min": 54.33003001607571,
+      "clean_f1": 0.9565290225312003,
+      "sbc_f1": 0.947984612811507,
+      "codec_drop": 0.00854440971969328
+    },
+    {
+      "file": "MIDI-UNPROCESSED_11-13_R1_2014_MID--AUDIO_13_R1_2014_wav--4",
+      "title": "Robert Schumann - Toccata in C Major, Op. 7",
+      "dur_min": 6.734613101566667,
+      "fast_repeats": 305,
+      "density_per_min": 45.28842197765572,
+      "clean_f1": 0.9437738445181062,
+      "sbc_f1": 0.9301135654561337,
+      "codec_drop": 0.013660279061972536
+    },
+    {
+      "file": "MIDI-UNPROCESSED_19-20_R1_2014_MID--AUDIO_19_R1_2014_wav--8",
+      "title": "Robert Schumann - Toccata in C Major, Op. 7",
+      "dur_min": 4.876530914066667,
+      "fast_repeats": 307,
+      "density_per_min": 62.95458911465911,
+      "clean_f1": 0.9554965127864498,
+      "sbc_f1": 0.945118909030434,
+      "codec_drop": 0.010377603756015708
+    },
+    {
+      "file": "MIDI-Unprocessed_SMF_02_R1_2004_01-05_ORIG_MID--AUDIO_02_R1_2004_10_Track10_wav",
+      "title": "Robert Schumann - Toccata in C Major, Opus 7",
+      "dur_min": 5.210917676183333,
+      "fast_repeats": 392,
+      "density_per_min": 75.22667298922197,
+      "clean_f1": 0.9413285922094715,
+      "sbc_f1": 0.9302212496960856,
+      "codec_drop": 0.011107342513385965
+    },
+    {
+      "file": "MIDI-Unprocessed_20_R1_2009_01-05_ORIG_MID--AUDIO_20_R1_2009_20_R1_2009_02_WAV",
+      "title": "Robert Schumann - Toccata in C, Op. 7",
+      "dur_min": 6.539189507816667,
+      "fast_repeats": 323,
+      "density_per_min": 49.3945005896984,
+      "clean_f1": 0.9521494370522007,
+      "sbc_f1": 0.9442631343188073,
+      "codec_drop": 0.007886302733393413
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital17-19_MID--AUDIO_17_R1_2018_wav--2",
+      "title": "Sergei Rachmaninoff - Etude Tableau Op. 39 No. 5",
+      "dur_min": 4.865223945316667,
+      "fast_repeats": 107,
+      "density_per_min": 21.99282113272498,
+      "clean_f1": 0.9078092605390463,
+      "sbc_f1": 0.8954892435808466,
+      "codec_drop": 0.012320016958199731
+    },
+    {
+      "file": "MIDI-Unprocessed_08_R1_2008_01-05_ORIG_MID--AUDIO_08_R1_2008_wav--3",
+      "title": "Sergei Rachmaninoff - Etude Tableaux Op. 39 No. 1 in C Minor",
+      "dur_min": 2.7436760312499997,
+      "fast_repeats": 135,
+      "density_per_min": 49.204059977334474,
+      "clean_f1": 0.9202657807308968,
+      "sbc_f1": 0.9078486918846858,
+      "codec_drop": 0.012417088846211066
+    },
+    {
+      "file": "MIDI-UNPROCESSED_04-05_R1_2014_MID--AUDIO_04_R1_2014_wav--5",
+      "title": "Sergei Rachmaninoff - Etude-Tableau in C Minor, Op. 39, No. 1",
+      "dur_min": 3.2895043671833335,
+      "fast_repeats": 64,
+      "density_per_min": 19.455818523445387,
+      "clean_f1": 0.9424823410696267,
+      "sbc_f1": 0.9346869712351947,
+      "codec_drop": 0.007795369834431964
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D2-13-20_mid--AUDIO-from_mp3_17_R1_2015_wav--3",
+      "title": "Sergei Rachmaninoff - Etude-Tableau in E-flat Minor, op. 39 No. 5",
+      "dur_min": 4.667465277783333,
+      "fast_repeats": 118,
+      "density_per_min": 25.28138785770259,
+      "clean_f1": 0.9395746887966805,
+      "sbc_f1": 0.9190690293573129,
+      "codec_drop": 0.020505659439367552
+    },
+    {
+      "file": "ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_04_R1_2013_wav--3",
+      "title": "Sergei Rachmaninoff - Etude-Tableaux Op. 39 No. 5",
+      "dur_min": 4.367361195316667,
+      "fast_repeats": 235,
+      "density_per_min": 53.808235566135885,
+      "clean_f1": 0.8949468085106383,
+      "sbc_f1": 0.8785782119115452,
+      "codec_drop": 0.016368596599093177
+    },
+    {
+      "file": "MIDI-Unprocessed_05_R1_2008_01-04_ORIG_MID--AUDIO_05_R1_2008_wav--4",
+      "title": "Sergei Rachmaninoff - Etude-Tableaux Op. 39 No. 5 in E-flat Minor",
+      "dur_min": 4.55955740625,
+      "fast_repeats": 105,
+      "density_per_min": 23.028550941385575,
+      "clean_f1": 0.9088974597685863,
+      "sbc_f1": 0.8944414751469802,
+      "codec_drop": 0.014455984621606022
+    },
+    {
+      "file": "MIDI-Unprocessed_SMF_02_R1_2004_01-05_ORIG_MID--AUDIO_02_R1_2004_08_Track08_wav",
+      "title": "Sergei Rachmaninoff - Etude-Tableaux, Opus 39 No. 8 in D Minor",
+      "dur_min": 3.1808666848000002,
+      "fast_repeats": 114,
+      "density_per_min": 35.839288878329036,
+      "clean_f1": 0.9506084466714388,
+      "sbc_f1": 0.9443350635403616,
+      "codec_drop": 0.006273383131077281
+    },
+    {
+      "file": "MIDI-Unprocessed_12_R1_2006_01-08_ORIG_MID--AUDIO_12_R1_2006_07_Track07_wav",
+      "title": "Sergei Rachmaninoff - Etudes-Tableaux",
+      "dur_min": 3.4146377890666666,
+      "fast_repeats": 474,
+      "density_per_min": 138.8141376276281,
+      "clean_f1": 0.9478597146286171,
+      "sbc_f1": 0.9392691029900333,
+      "codec_drop": 0.008590611638583767
+    },
+    {
+      "file": "MIDI-Unprocessed_12_R3_2008_01-04_ORIG_MID--AUDIO_12_R3_2008_wav--3",
+      "title": "Sergei Rachmaninoff - Prelude Op. 23 No. 6 in E-flat Major",
+      "dur_min": 2.791552585933333,
+      "fast_repeats": 6,
+      "density_per_min": 2.149341563628094,
+      "clean_f1": 0.9780130293159609,
+      "sbc_f1": 0.9736094194072269,
+      "codec_drop": 0.0044036099087340075
+    },
+    {
+      "file": "MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_11_R1_2015_wav--5",
+      "title": "Sergei Rachmaninoff - Prelude Op. 32 No. 8 in A Minor",
+      "dur_min": 1.8311805555499998,
+      "fast_repeats": 21,
+      "density_per_min": 11.46801168041706,
+      "clean_f1": 0.9859661748830514,
+      "sbc_f1": 0.9805615550755941,
+      "codec_drop": 0.005404619807457323
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_08_R1_2004_04-06_ORIG_MID--AUDIO_08_R1_2004_05_Track05_wav--1",
+      "title": "Sergei Rachmaninoff - Prelude Op. 32, No. 10",
+      "dur_min": 4.792159566733333,
+      "fast_repeats": 42,
+      "density_per_min": 8.764315840307066,
+      "clean_f1": 0.9435578045932269,
+      "sbc_f1": 0.9289230163417995,
+      "codec_drop": 0.014634788251427389
+    },
+    {
+      "file": "MIDI-Unprocessed_03_R2_2011_MID--AUDIO_R2-D1_06_Track06_wav",
+      "title": "Sergei Rachmaninoff - Prelude in G-Sharp Minor,Op. 32 No. 12",
+      "dur_min": 2.1289597656333332,
+      "fast_repeats": 24,
+      "density_per_min": 11.273111116245245,
+      "clean_f1": 0.965625,
+      "sbc_f1": 0.9555694618272841,
+      "codec_drop": 0.010055538172715872
+    },
+    {
+      "file": "MIDI-Unprocessed_05_R1_2011_MID--AUDIO_R1-D2_12_Track12_wav",
+      "title": "Wolfgang Amadeus Mozart - Rondo in A Minor,  K. 511",
+      "dur_min": 8.346924523433334,
+      "fast_repeats": 72,
+      "density_per_min": 8.625931598862032,
+      "clean_f1": 0.9933011789924974,
+      "sbc_f1": 0.99196356817573,
+      "codec_drop": 0.0013376108167674206
+    },
+    {
+      "file": "MIDI-Unprocessed_08_R1_2008_01-05_ORIG_MID--AUDIO_08_R1_2008_wav--2",
+      "title": "Wolfgang Amadeus Mozart - Sonata in B-flat Major, K 333, First Movement",
+      "dur_min": 4.984926460933334,
+      "fast_repeats": 67,
+      "density_per_min": 13.440519238363148,
+      "clean_f1": 0.9941952506596305,
+      "sbc_f1": 0.9940225035161745,
+      "codec_drop": 0.00017274714345605346
+    },
+    {
+      "file": "ORIG-MIDI_03_7_10_13_Group_MID--AUDIO_17_R3_2013_wav--1",
+      "title": "Wolfgang Amadeus Mozart - Sonata in B-flat Major, K. 333, 1st mov.",
+      "dur_min": 5.1221013593833336,
+      "fast_repeats": 80,
+      "density_per_min": 15.618589790974276,
+      "clean_f1": 0.9926624737945492,
+      "sbc_f1": 0.991599579978999,
+      "codec_drop": 0.0010628938155502476
+    },
+    {
+      "file": "MIDI-Unprocessed_052_PIANO052_MID--AUDIO-split_07-06-17_Piano-e_3-03_wav--3",
+      "title": "Wolfgang Amadeus Mozart - Sonata in B-flat Major, K. 333, I. Allegro",
+      "dur_min": 5.032347136249999,
+      "fast_repeats": 50,
+      "density_per_min": 9.93572157211296,
+      "clean_f1": 0.9982300884955752,
+      "sbc_f1": 0.9971671388101984,
+      "codec_drop": 0.0010629496853767906
+    },
+    {
+      "file": "ORIG-MIDI_03_7_6_13_Group__MID--AUDIO_09_R1_2013_wav--3",
+      "title": "Wolfgang Amadeus Mozart - Sonata in F Major, K. 280, 1st mov.",
+      "dur_min": 3.210088492183333,
+      "fast_repeats": 50,
+      "density_per_min": 15.575894596598063,
+      "clean_f1": 0.9895432030820033,
+      "sbc_f1": 0.988442487616951,
+      "codec_drop": 0.0011007154650523043
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_14_R1_2004_04_ORIG_MID--AUDIO_14_R1_2004_04_Track04_wav",
+      "title": "Wolfgang Amadeus Mozart - Sonata in F Major, K280",
+      "dur_min": 4.088591927216666,
+      "fast_repeats": 73,
+      "density_per_min": 17.854557583518783,
+      "clean_f1": 0.9907933398628795,
+      "sbc_f1": 0.9866614358571988,
+      "codec_drop": 0.004131904005680753
+    },
+    {
+      "file": "MIDI-Unprocessed_XP_14_R1_2004_04_ORIG_MID--AUDIO_14_R1_2004_05_Track05_wav",
+      "title": "Wolfgang Amadeus Mozart - Sonata in F Major, K280",
+      "dur_min": 4.0245073584333335,
+      "fast_repeats": 17,
+      "density_per_min": 4.224119497353283,
+      "clean_f1": 0.9799885648942253,
+      "sbc_f1": 0.9805491990846681,
+      "codec_drop": -0.0005606341904428325
+    }
+  ]
+}

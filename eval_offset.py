@@ -34,6 +34,29 @@ from ov_piano.data.maestro import MetaMAESTROv3, MelMaestro
 from ov_piano.models.ov import OnsetsAndVelocities
 from ov_piano.inference import strided_inference, OnsetVelocityFrameDecoder
 from ov_piano.eval import GtLoaderMaestro
+from ov_piano.data.key_model import KeyboardStateMachine
+from ov_piano.data.midi import MidiToPianoRoll
+
+
+class KeyUpGtLoader(GtLoaderMaestro):
+    """GT loader with sustain/sostenuto DISABLED, so note offsets are the raw
+    key-up (finger off the key), not pedal-extended. This is the correct target
+    for a keyboard-mirroring LED."""
+
+    @classmethod
+    def get_midi_eventdata(cls, abspath):
+        mid = cls.PARSER.load_midi(abspath)
+        msgs, meta_msgs = cls.PARSER.parse_midi(mid)
+        MidiToPianoRoll._check_midi(msgs, meta_msgs)
+        # sus_thresh=ten_thresh=127 -> CC64/CC66 never exceed it -> pedals never
+        # "on" -> every note_off sets offset at key-up.
+        (key_events, sus_states, ten_states, soft_states,
+         largest_ts) = cls.PARSER.ksm_parse_midi_messages(
+             msgs, KeyboardStateMachine(
+                 127, 127,
+                 ignore_redundant_keypress=True,
+                 ignore_redundant_keylift=True))
+        return (key_events, sus_states, ten_states, soft_states, largest_ts)
 
 
 @dataclass
@@ -45,6 +68,7 @@ class ConfDef:
     SNAPSHOT_INPATH: str = ""
     DATASET_VARIANT: Optional[str] = None
     RESULTS_JSON: Optional[str] = None
+    KEYUP_GT: bool = True    # score against key-up (raw note-off) GT, not pedal-extended
     LIMIT: int = 0
     THRESHOLD: float = 0.75
     FRAME_OFF_THRESHOLD: float = 0.5
@@ -97,9 +121,10 @@ if __name__ == "__main__":
         meta.data = meta.data[:CONF.LIMIT]
     ds = MelMaestro(CONF.HDF5_MEL_PATH, CONF.HDF5_ROLL_PATH,
                     *(x[0] for x in meta.data), as_torch_tensors=False)
-    gts = GtLoaderMaestro(ds, meta)
+    gts = (KeyUpGtLoader if CONF.KEYUP_GT else GtLoaderMaestro)(ds, meta)
     print(f"[offset-eval] variant={CONF.DATASET_VARIANT} files={len(ds)} "
-          f"thresh={CONF.THRESHOLD} offset_ratio={CONF.OFFSET_RATIO}", flush=True)
+          f"thresh={CONF.THRESHOLD} offset_ratio={CONF.OFFSET_RATIO} "
+          f"gt={'KEY-UP' if CONF.KEYUP_GT else 'PEDAL'}", flush=True)
 
     model = OnsetsAndVelocities(
         in_chans=2, in_height=MELS, out_height=num_keys,

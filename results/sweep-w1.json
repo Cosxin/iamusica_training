@@ -1,0 +1,52 @@
+{
+  "variant": "clean",
+  "n_files": 8,
+  "threshold": 0.75,
+  "offset_ratio": 0.2,
+  "onset_f1_mean": 0.9332955876838465,
+  "note_with_offset_f1_mean": 0.5249347504037878,
+  "per_file": [
+    {
+      "file": "MIDI-Unprocessed_11_R1_2009_06-09_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_07_WAV",
+      "onset_f1": 0.9634317862165963,
+      "offset_f1": 0.4022503516174402
+    },
+    {
+      "file": "MIDI-Unprocessed_02_R1_2009_03-06_ORIG_MID--AUDIO_02_R1_2009_02_R1_2009_04_WAV",
+      "onset_f1": 0.9623003194888179,
+      "offset_f1": 0.44345047923322684
+    },
+    {
+      "file": "MIDI-Unprocessed_01_R1_2006_01-09_ORIG_MID--AUDIO_01_R1_2006_04_Track04_wav",
+      "onset_f1": 0.9315413691726165,
+      "offset_f1": 0.5770684586308275
+    },
+    {
+      "file": "MIDI-Unprocessed_24_R1_2006_01-05_ORIG_MID--AUDIO_24_R1_2006_03_Track03_wav",
+      "onset_f1": 0.9132870864461047,
+      "offset_f1": 0.5651013874066169
+    },
+    {
+      "file": "MIDI-Unprocessed_11_R1_2009_06-09_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_08_WAV",
+      "onset_f1": 0.9260808926080893,
+      "offset_f1": 0.5713198934956257
+    },
+    {
+      "file": "MIDI-Unprocessed_Recital13-15_MID--AUDIO_15_R1_2018_wav--1",
+      "onset_f1": 0.9463237349734415,
+      "offset_f1": 0.511881464914733
+    },
+    {
+      "file": "MIDI-UNPROCESSED_09-10_R1_2014_MID--AUDIO_09_R1_2014_wav--4",
+      "onset_f1": 0.9185322559279374,
+      "offset_f1": 0.5395416611471717
+    },
+    {
+      "file": "MIDI-Unprocessed_11_R1_2009_01-05_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_04_WAV",
+      "onset_f1": 0.9048672566371682,
+      "offset_f1": 0.5888643067846607
+    }
+  ],
+  "gt_dur_median": 0.5533854166666288,
+  "pred_dur_median": 0.5039999999999978
+}

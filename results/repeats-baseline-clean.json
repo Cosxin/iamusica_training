@@ -1,0 +1,85 @@
+{
+  "variant": "clean",
+  "n_files": 40,
+  "mode": "onset_only",
+  "threshold": 0.75,
+  "tol_secs": 0.05,
+  "gap_tol_secs": 0.024,
+  "total_pairs": 154628,
+  "onset_retrigger_recall_overall": 0.8605944589595674,
+  "clean_segment_recall_overall": null,
+  "bins": [
+    {
+      "bin": "0-50ms",
+      "n": 49,
+      "onset_retrigger_recall": 0.0,
+      "clean_segment_recall": null,
+      "onset_ok": 0,
+      "clean_ok": null
+    },
+    {
+      "bin": "50-75ms",
+      "n": 205,
+      "onset_retrigger_recall": 0.01951219512195122,
+      "clean_segment_recall": null,
+      "onset_ok": 4,
+      "clean_ok": null
+    },
+    {
+      "bin": "75-100ms",
+      "n": 1068,
+      "onset_retrigger_recall": 0.5365168539325843,
+      "clean_segment_recall": null,
+      "onset_ok": 573,
+      "clean_ok": null
+    },
+    {
+      "bin": "100-150ms",
+      "n": 8677,
+      "onset_retrigger_recall": 0.8073066728131842,
+      "clean_segment_recall": null,
+      "onset_ok": 7005,
+      "clean_ok": null
+    },
+    {
+      "bin": "150-200ms",
+      "n": 9220,
+      "onset_retrigger_recall": 0.8210412147505423,
+      "clean_segment_recall": null,
+      "onset_ok": 7570,
+      "clean_ok": null
+    },
+    {
+      "bin": "200-300ms",
+      "n": 13953,
+      "onset_retrigger_recall": 0.8259155737117466,
+      "clean_segment_recall": null,
+      "onset_ok": 11524,
+      "clean_ok": null
+    },
+    {
+      "bin": "300-500ms",
+      "n": 19413,
+      "onset_retrigger_recall": 0.8672539020244167,
+      "clean_segment_recall": null,
+      "onset_ok": 16836,
+      "clean_ok": null
+    },
+    {
+      "bin": "500-1000ms",
+      "n": 26527,
+      "onset_retrigger_recall": 0.8746560108568628,
+      "clean_segment_recall": null,
+      "onset_ok": 23202,
+      "clean_ok": null
+    },
+    {
+      "bin": ">1000ms",
+      "n": 75516,
+      "onset_retrigger_recall": 0.8787276868478203,
+      "clean_segment_recall": null,
+      "onset_ok": 66358,
+      "clean_ok": null
+    }
+  ]
+}

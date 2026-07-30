@@ -1,0 +1,85 @@
+{
+  "variant": "clean",
+  "n_files": 40,
+  "mode": "frame",
+  "threshold": 0.75,
+  "tol_secs": 0.05,
+  "gap_tol_secs": 0.024,
+  "total_pairs": 154628,
+  "onset_retrigger_recall_overall": 0.8614028507126782,
+  "clean_segment_recall_overall": 0.8592234265462917,
+  "bins": [
+    {
+      "bin": "0-50ms",
+      "n": 49,
+      "onset_retrigger_recall": 0.0,
+      "clean_segment_recall": 0.0,
+      "onset_ok": 0,
+      "clean_ok": 0
+    },
+    {
+      "bin": "50-75ms",
+      "n": 205,
+      "onset_retrigger_recall": 0.004878048780487805,
+      "clean_segment_recall": 0.004878048780487805,
+      "onset_ok": 1,
+      "clean_ok": 1
+    },
+    {
+      "bin": "75-100ms",
+      "n": 1068,
+      "onset_retrigger_recall": 0.5608614232209738,
+      "clean_segment_recall": 0.5205992509363296,
+      "onset_ok": 599,
+      "clean_ok": 556
+    },
+    {
+      "bin": "100-150ms",
+      "n": 8677,
+      "onset_retrigger_recall": 0.8142215051285007,
+      "clean_segment_recall": 0.7840267373516192,
+      "onset_ok": 7065,
+      "clean_ok": 6803
+    },
+    {
+      "bin": "150-200ms",
+      "n": 9220,
+      "onset_retrigger_recall": 0.826355748373102,
+      "clean_segment_recall": 0.8235357917570499,
+      "onset_ok": 7619,
+      "clean_ok": 7593
+    },
+    {
+      "bin": "200-300ms",
+      "n": 13953,
+      "onset_retrigger_recall": 0.8290690174156096,
+      "clean_segment_recall": 0.8287106715401705,
+      "onset_ok": 11568,
+      "clean_ok": 11563
+    },
+    {
+      "bin": "300-500ms",
+      "n": 19413,
+      "onset_retrigger_recall": 0.8663782001751403,
+      "clean_segment_recall": 0.8663266883016535,
+      "onset_ok": 16819,
+      "clean_ok": 16818
+    },
+    {
+      "bin": "500-1000ms",
+      "n": 26527,
+      "onset_retrigger_recall": 0.8741659441323935,
+      "clean_segment_recall": 0.8741659441323935,
+      "onset_ok": 23189,
+      "clean_ok": 23189
+    },
+    {
+      "bin": ">1000ms",
+      "n": 75516,
+      "onset_retrigger_recall": 0.8784496000847503,
+      "clean_segment_recall": 0.8784496000847503,
+      "onset_ok": 66337,
+      "clean_ok": 66337
+    }
+  ]
+}

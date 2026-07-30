@@ -1,0 +1,84 @@
+{
+  "variant": "clean",
+  "n_files": 40,
+  "threshold": 0.75,
+  "tol_secs": 0.05,
+  "gap_tol_secs": 0.024,
+  "total_pairs": 154628,
+  "onset_retrigger_recall_overall": 0.8469940761052333,
+  "clean_segment_recall_overall": 0.8203300825206301,
+  "bins": [
+    {
+      "bin": "0-50ms",
+      "n": 49,
+      "onset_retrigger_recall": 0.0,
+      "clean_segment_recall": 0.0,
+      "onset_ok": 0,
+      "clean_ok": 0
+    },
+    {
+      "bin": "50-75ms",
+      "n": 205,
+      "onset_retrigger_recall": 0.02926829268292683,
+      "clean_segment_recall": 0.02926829268292683,
+      "onset_ok": 6,
+      "clean_ok": 6
+    },
+    {
+      "bin": "75-100ms",
+      "n": 1068,
+      "onset_retrigger_recall": 0.5318352059925093,
+      "clean_segment_recall": 0.48314606741573035,
+      "onset_ok": 568,
+      "clean_ok": 516
+    },
+    {
+      "bin": "100-150ms",
+      "n": 8677,
+      "onset_retrigger_recall": 0.7828742652990665,
+      "clean_segment_recall": 0.7068111098305866,
+      "onset_ok": 6793,
+      "clean_ok": 6133
+    },
+    {
+      "bin": "150-200ms",
+      "n": 9220,
+      "onset_retrigger_recall": 0.8080260303687635,
+      "clean_segment_recall": 0.7433839479392624,
+      "onset_ok": 7450,
+      "clean_ok": 6854
+    },
+    {
+      "bin": "200-300ms",
+      "n": 13953,
+      "onset_retrigger_recall": 0.8124417687952412,
+      "clean_segment_recall": 0.7615566544829069,
+      "onset_ok": 11336,
+      "clean_ok": 10626
+    },
+    {
+      "bin": "300-500ms",
+      "n": 19413,
+      "onset_retrigger_recall": 0.859784680368825,
+      "clean_segment_recall": 0.8157420285375779,
+      "onset_ok": 16691,
+      "clean_ok": 15836
+    },
+    {
+      "bin": "500-1000ms",
+      "n": 26527,
+      "onset_retrigger_recall": 0.8656086251743507,
+      "clean_segment_recall": 0.8328118520752441,
+      "onset_ok": 22962,
+      "clean_ok": 22092
+    },
+    {
+      "bin": ">1000ms",
+      "n": 75516,
+      "onset_retrigger_recall": 0.8629032258064516,
+      "clean_segment_recall": 0.8578711796175645,
+      "onset_ok": 65163,
+      "clean_ok": 64783
+    }
+  ]
+}
