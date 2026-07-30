@@ -61,6 +61,10 @@ def score(gt_on, gt_off, gt_key, pr_on, pr_off, pr_key, tol, offset_ratio):
     """mir_eval note F1, MIDI-key pitches (repo convention). Returns (P,R,F1)."""
     if len(pr_on) == 0 or len(gt_on) == 0:
         return 0.0, 0.0, 0.0
+    gt_on = np.asarray(gt_on, float); pr_on = np.asarray(pr_on, float)
+    # mir_eval requires strictly-positive interval durations
+    gt_off = np.maximum(np.asarray(gt_off, float), gt_on + 1e-3)
+    pr_off = np.maximum(np.asarray(pr_off, float), pr_on + 1e-3)
     ref_int = np.stack([gt_on, gt_off]).T
     est_int = np.stack([pr_on, pr_off]).T
     p, r, f1, _ = prf1o(
