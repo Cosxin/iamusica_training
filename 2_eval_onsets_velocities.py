@@ -46,9 +46,11 @@ from ov_piano.logging import ColorLogger
 from ov_piano.data.maestro import MetaMAESTROv1, MetaMAESTROv2, MetaMAESTROv3
 from ov_piano.data.maestro import MelMaestro
 from ov_piano.models.ov import OnsetsAndVelocities
-from ov_piano.inference import strided_inference, OnsetVelocityNmsDecoder
+from ov_piano.inference import (
+    strided_inference, OnsetVelocityNmsDecoder, OnsetVelocityFrameDecoder)
 from ov_piano.eval import GtLoaderMaestro
 from ov_piano.eval import threshold_eval_single_file
+from ov_piano.eval import eval_note_events_with_offsets
 
 # import matplotlib.pyplot as plt
 
@@ -128,6 +130,12 @@ class ConfDef:
     SEARCH_THRESHOLDS: List[float] = (0.70, 0.71, 0.72, 0.73, 0.74, 0.75,
                                       0.76, 0.77, 0.78, 0.79, 0.80)
     SEARCH_SHIFTS: List[float] = (-0.01,)
+    SEARCH_FRAME_OFF_THRESHOLDS: List[float] = (0.3, 0.4, 0.5, 0.6)
+    SEARCH_RELEASE_DEBOUNCE_FRAMES: List[int] = (2, 3, 4)
+    MIN_NOTE_DURATION_SECS: float = 0.05
+    MAX_NOTE_DURATION_SECS: float = 30.0
+    OFFSET_RATIO: float = 0.2
+    OFFSET_MIN_TOLERANCE: float = 0.05
     #
     DECODER_GAUSS_STD: float = 1
     DECODER_GAUSS_KSIZE: int = 11
@@ -236,6 +244,19 @@ if __name__ == "__main__":
         gauss_conv_ksize=CONF.DECODER_GAUSS_KSIZE,
         vel_pad_left=1, vel_pad_right=1)
 
+    def frame_decoder(frame_threshold, debounce):
+        return OnsetVelocityFrameDecoder(
+            num_piano_keys, nms_pool_ksize=3,
+            gauss_conv_stddev=CONF.DECODER_GAUSS_STD,
+            gauss_conv_ksize=CONF.DECODER_GAUSS_KSIZE,
+            vel_pad_left=1, vel_pad_right=1,
+            frame_off_threshold=frame_threshold,
+            release_debounce_frames=debounce,
+            min_note_frames=max(
+                1, round(CONF.MIN_NOTE_DURATION_SECS / SECS_PER_FRAME)),
+            max_note_frames=max(
+                1, round(CONF.MAX_NOTE_DURATION_SECS / SECS_PER_FRAME)))
+
     ##############
     # XV INFERENCE
     ##############
@@ -248,6 +269,9 @@ if __name__ == "__main__":
         probs, vels = outputs[:2]
         probs = F.pad(torch.sigmoid(probs[-1]), (1, 0))
         vels = F.pad(torch.sigmoid(vels), (1, 0))
+        if CONF.ENABLE_FRAME_HEAD:
+            frames = F.pad(torch.sigmoid(outputs[2]), (1, 0))
+            return probs, vels, frames
         return probs, vels
 
     xv_dataframes = []
@@ -256,13 +280,16 @@ if __name__ == "__main__":
         txt_logger.info(f"[{i}/{len_xv}] XV inference: {md}")
         with torch.no_grad():
             tmel = torch.from_numpy(mel).to(CONF.DEVICE).unsqueeze(0)
-            onset_pred, vel_pred = strided_inference(
+            predictions = strided_inference(
                 model_inference, tmel, CHUNK_SIZE, CHUNK_OVERLAP)
+            onset_pred, vel_pred = predictions[:2]
+            frame_pred = predictions[2] if CONF.ENABLE_FRAME_HEAD else None
             del tmel
             pred_df = decoder(
                 onset_pred, vel_pred, pthresh=min(CONF.SEARCH_THRESHOLDS))
             gt_df = xv_gts(md)[0]
-            xv_dataframes.append((gt_df, pred_df))
+            xv_dataframes.append(
+                (gt_df, pred_df, onset_pred, vel_pred, frame_pred))
 
     ###############
     # XV GRIDSEARCH
@@ -273,7 +300,7 @@ if __name__ == "__main__":
         for shift in CONF.SEARCH_SHIFTS:
             this_eval = []
             this_eval_vel = []
-            for i, (gtdf, preddf) in enumerate(xv_dataframes, 1):
+            for i, (gtdf, preddf, _, _, _) in enumerate(xv_dataframes, 1):
                 txt_logger.info(f"[{i}/{len_xv} (xv set)]: {(thresh, shift)}")
                 prf1, prf1_v = threshold_eval_single_file(
                     gtdf, preddf, SECS_PER_FRAME, key_beg,
@@ -288,6 +315,30 @@ if __name__ == "__main__":
                       for k, v in xv_gridsearch_vel.items()}
     ((best_t, best_s), (best_p, best_r, best_f1)) = max(
         xv_summary.items(), key=lambda elt: elt[1][2])
+    best_frame_t = None
+    best_debounce = None
+    xv_offset_summary = {}
+    if CONF.ENABLE_FRAME_HEAD:
+        for frame_t in CONF.SEARCH_FRAME_OFF_THRESHOLDS:
+            for debounce in CONF.SEARCH_RELEASE_DEBOUNCE_FRAMES:
+                complete_decoder = frame_decoder(frame_t, debounce)
+                results = []
+                results_vel = []
+                for gtdf, _, onset_pred, vel_pred, frame_pred in xv_dataframes:
+                    complete = complete_decoder(
+                        onset_pred, vel_pred, frame_pred, pthresh=best_t)
+                    prf, prf_vel = eval_note_events_with_offsets(
+                        gtdf, complete, SECS_PER_FRAME, key_beg,
+                        shift_preds=best_s, tol_secs=CONF.TOLERANCE_SECS,
+                        tol_vel=CONF.TOLERANCE_VEL,
+                        offset_ratio=CONF.OFFSET_RATIO,
+                        offset_min_tolerance=CONF.OFFSET_MIN_TOLERANCE)
+                    results.append(prf)
+                    results_vel.append(prf_vel)
+                xv_offset_summary[(frame_t, debounce)] = (
+                    np.mean(results, axis=0), np.mean(results_vel, axis=0))
+        (best_frame_t, best_debounce), _ = max(
+            xv_offset_summary.items(), key=lambda item: item[1][0][2])
     #
     xv_summary_df = pd.DataFrame(
         ((t, s, p, r, f1) for ((t, s), (p, r, f1)) in xv_summary.items()),
@@ -310,19 +361,25 @@ if __name__ == "__main__":
         txt_logger.info(f"[{i}/{len_test} (test set)] {md}")
         with torch.no_grad():
             tmel = torch.from_numpy(mel).to(CONF.DEVICE).unsqueeze(0)
-            onset_pred, vel_pred = strided_inference(
+            predictions = strided_inference(
                 model_inference, tmel, CHUNK_SIZE, CHUNK_OVERLAP)
+            onset_pred, vel_pred = predictions[:2]
+            frame_pred = predictions[2] if CONF.ENABLE_FRAME_HEAD else None
             del tmel
             pred_df = decoder(
                 onset_pred, vel_pred, pthresh=min(CONF.SEARCH_THRESHOLDS))
             gt_df = test_gts(md)[0]
-        test_dataframes.append((md[0], gt_df, pred_df))
+        complete_df = (
+            frame_decoder(best_frame_t, best_debounce)(
+                onset_pred, vel_pred, frame_pred, pthresh=best_t)
+            if CONF.ENABLE_FRAME_HEAD else None)
+        test_dataframes.append((md[0], gt_df, pred_df, complete_df))
 
     test_by_threshold = {}
     for thresh in CONF.SEARCH_THRESHOLDS:
         test_results = []
         test_results_vel = []
-        for filename, gt_df, pred_df in test_dataframes:
+        for filename, gt_df, pred_df, _ in test_dataframes:
             prf1, prf1_v = threshold_eval_single_file(
                 gt_df, pred_df, SECS_PER_FRAME, key_beg,
                 thresh=thresh, shift_preds=best_s,
@@ -332,6 +389,54 @@ if __name__ == "__main__":
         test_by_threshold[float(thresh)] = (test_results, test_results_vel)
 
     test_results, test_results_vel = test_by_threshold[float(best_t)]
+    test_offset_results = []
+    test_offset_results_vel = []
+    if CONF.ENABLE_FRAME_HEAD:
+        for filename, gt_df, _, complete_df in test_dataframes:
+            prf, prf_vel = eval_note_events_with_offsets(
+                gt_df, complete_df, SECS_PER_FRAME, key_beg,
+                shift_preds=best_s, tol_secs=CONF.TOLERANCE_SECS,
+                tol_vel=CONF.TOLERANCE_VEL,
+                offset_ratio=CONF.OFFSET_RATIO,
+                offset_min_tolerance=CONF.OFFSET_MIN_TOLERANCE)
+            pred_offsets = (
+                complete_df["offset_idx"].to_numpy() * SECS_PER_FRAME +
+                best_s)
+            pred_durations = (
+                complete_df["duration_frames"].to_numpy() * SECS_PER_FRAME)
+            # Distribution diagnostics use nearest same-pitch/onset matches.
+            offset_errors = []
+            duration_errors = []
+            for row, pred_offset, pred_duration in zip(
+                    complete_df.itertuples(), pred_offsets, pred_durations):
+                candidates = gt_df[gt_df["key"] == row.key + key_beg]
+                if candidates.empty:
+                    continue
+                onset = row.onset_idx * SECS_PER_FRAME + best_s
+                nearest = candidates.iloc[
+                    np.abs(candidates["onset"].to_numpy() - onset).argmin()]
+                if abs(float(nearest["onset"]) - onset) <= CONF.TOLERANCE_SECS:
+                    offset_errors.append(pred_offset - float(nearest["offset"]))
+                    duration_errors.append(
+                        pred_duration -
+                        (float(nearest["offset"]) - float(nearest["onset"])))
+            reasons = complete_df["release_reason"].value_counts()
+            diagnostics = {
+                "median_abs_offset_error": float(np.median(
+                    np.abs(offset_errors))) if offset_errors else 0.0,
+                "p90_abs_offset_error": float(np.percentile(
+                    np.abs(offset_errors), 90)) if offset_errors else 0.0,
+                "median_abs_duration_error": float(np.median(
+                    np.abs(duration_errors))) if duration_errors else 0.0,
+                "p90_abs_duration_error": float(np.percentile(
+                    np.abs(duration_errors), 90)) if duration_errors else 0.0,
+                "premature_releases": int(sum(
+                    error < -CONF.OFFSET_MIN_TOLERANCE
+                    for error in offset_errors)),
+                "stuck_notes": int(reasons.get("max_duration", 0)),
+            }
+            test_offset_results.append((filename, *prf, diagnostics))
+            test_offset_results_vel.append((filename, *prf_vel))
     #
     test_results_df = pd.DataFrame(
         test_results, columns=["Filename", "P", "R", "F1"])
@@ -376,7 +481,7 @@ if __name__ == "__main__":
             git_sha = None
 
         payload = {
-            "schema_version": 1,
+            "schema_version": 2,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "run_name": CONF.RUN_NAME,
             "dataset_variant": CONF.DATASET_VARIANT,
@@ -399,6 +504,13 @@ if __name__ == "__main__":
                 "searched_shifts": [float(x) for x in CONF.SEARCH_SHIFTS],
                 "selected_shift": float(best_s),
                 "selected_threshold": float(best_t),
+                "selected_frame_off_threshold": (
+                    float(best_frame_t) if best_frame_t is not None else None),
+                "selected_release_debounce_frames": (
+                    int(best_debounce) if best_debounce is not None else None),
+                "offset_ratio": float(CONF.OFFSET_RATIO),
+                "offset_min_tolerance": float(
+                    CONF.OFFSET_MIN_TOLERANCE),
             },
             "validation": [
                 {
@@ -434,6 +546,46 @@ if __name__ == "__main__":
                 }
                 for threshold, rows in test_by_threshold.items()
             ],
+            "offset_evaluation": {
+                "enabled": bool(CONF.ENABLE_FRAME_HEAD),
+                "validation": [
+                    {
+                        "frame_off_threshold": float(frame_t),
+                        "release_debounce_frames": int(debounce),
+                        "notes": dict(zip(
+                            ("precision", "recall", "f1"),
+                            map(float, values[0]))),
+                        "notes_velocities": dict(zip(
+                            ("precision", "recall", "f1"),
+                            map(float, values[1]))),
+                    }
+                    for (frame_t, debounce), values
+                    in xv_offset_summary.items()
+                ],
+                "test": {
+                    "notes": mean_prf([
+                        row[:4] for row in test_offset_results
+                    ]) if test_offset_results else None,
+                    "notes_velocities": mean_prf(
+                        test_offset_results_vel
+                    ) if test_offset_results_vel else None,
+                    "files": [
+                        {
+                            "filename": row[0],
+                            "notes": dict(zip(
+                                ("precision", "recall", "f1"),
+                                map(float, row[1:4]))),
+                            "notes_velocities": dict(zip(
+                                ("precision", "recall", "f1"),
+                                map(float, velocity_row[1:]))),
+                            **row[4],
+                        }
+                        for row, velocity_row in zip(
+                            test_offset_results,
+                            test_offset_results_vel)
+                    ],
+                },
+            },
             "config": OmegaConf.to_container(CONF, resolve=True),
         }
         result_dir = os.path.dirname(os.path.abspath(CONF.RESULTS_JSON))

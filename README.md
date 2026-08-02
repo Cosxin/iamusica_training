@@ -1,5 +1,13 @@
 # iamusica_training
 
+## Current pedal-transcription research
+
+The authoritative architecture description, experimental ledger, artifact
+hashes, Raspberry Pi measurements, reproduction entry points, and remaining
+release gates are consolidated in
+[`PEDAL_RESEARCH_MASTER.md`](PEDAL_RESEARCH_MASTER.md). Historical launch logs
+and scratch notes are not authoritative.
+
 
 <p align="center">
 <img src="assets/qualitative_plot_bone_small.png" alt="Onsets and Velocities input/output example" width="60.0%"/>

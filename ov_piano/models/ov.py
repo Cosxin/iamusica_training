@@ -194,7 +194,9 @@ class OnsetsAndVelocities(torch.nn.Module):
           shape ``(b, stem_chans, keys, t-1)`` and ``x_stages`` is a list with
           one onset prediction per stage, each of shape ``(b, keys, t-1)``.
         """
-        xdiff = x.diff(dim=-1)  # (b, melbins, t-1)
+        # Slice subtraction is equivalent to torch.diff here and is supported
+        # by the legacy ONNX exporter used for the Raspberry Pi model.
+        xdiff = x[:, :, 1:] - x[:, :, :-1]  # (b, melbins, t-1)
         # x+xdiff has shape (b, 2, melbins, t-1)
         x = torch.stack([x[:, :, 1:], xdiff]).permute(1, 0, 2, 3)
         x = self.specnorm(x)
