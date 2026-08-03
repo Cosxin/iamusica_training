@@ -8,6 +8,9 @@ out/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+models/pedal_checkpoints/*.torch
+models/pedal_checkpoints/*.onnx
+artifacts/runpod_handoff/
 *$py.class
 
 # C extensions
