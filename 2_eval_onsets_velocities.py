@@ -115,7 +115,6 @@ class ConfDef:
         "datasets",
         "MAESTROv3_roll_quant=0.024_midivals=128_extendsus=True.h5")
     SNAPSHOT_INPATH: str = MISSING
-    ENABLE_FRAME_HEAD: bool = False
     RESULTS_JSON: Optional[str] = None
     RUN_NAME: Optional[str] = None
     DATASET_VARIANT: Optional[str] = None
@@ -226,9 +225,9 @@ if __name__ == "__main__":
         bn_momentum=0,
         leaky_relu_slope=CONF.LEAKY_RELU_SLOPE,
         dropout_drop_p=0,
-        enable_frame_head=CONF.ENABLE_FRAME_HEAD).to(CONF.DEVICE)
+        ).to(CONF.DEVICE)
     load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=True,
-               strict=not CONF.ENABLE_FRAME_HEAD)
+               strict=True)
     # instantiate decoder
     decoder = OnsetVelocityNmsDecoder(
         num_piano_keys, nms_pool_ksize=3,

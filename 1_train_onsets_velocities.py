@@ -36,6 +36,7 @@ from ov_piano.data.maestro import MetaMAESTROv1, MetaMAESTROv2, MetaMAESTROv3
 from ov_piano.data.maestro import MelMaestro, MelMaestroChunks
 from ov_piano.models.ov import OnsetsAndVelocities
 from ov_piano.utils import MaskedBCEWithLogitsLoss
+from ov_piano.utils import remaining_time_targets, censored_offset_loss
 from ov_piano.optimizers import AdamWR
 from ov_piano.inference import strided_inference, OnsetVelocityNmsDecoder
 from ov_piano.eval import GtLoaderMaestro, eval_note_events
@@ -151,9 +152,16 @@ class ConfDef:
     VEL_LOSS_LAMBDA: float = 10.0
     TRAINABLE_ONSETS: bool = True
     TRAINABLE_COMPONENTS: str = "all"
-    ENABLE_FRAME_HEAD: bool = False
-    FRAME_LOSS_LAMBDA: float = 1.0
-    FRAME_POSITIVES_WEIGHT: float = 1.0
+    # Sounding-off regression head (log1p seconds until the note stops
+    # sounding). Requires the sustain-extended roll; see remaining_time_targets.
+    ENABLE_OFFSET_HEAD: bool = False
+    OFFSET_LOSS_LAMBDA: float = 1.0
+    # Notes still sounding past the cap are marked CENSORED rather than given an
+    # exact target. 2.0 s, not 8.0: at the onset frame the model sees only 0.5 s
+    # of future audio, so long durations are not inferable and asking for them
+    # taught the head to emit a near-constant prior (0.87-0.96 s regardless of
+    # truth, r=0.318, 3051 ms error past 2.5 s). See NOTES_frame_head.md.
+    OFFSET_CAP_SECS: float = 2.0
     # decoder
     DECODER_GAUSS_STD: float = 1
     DECODER_GAUSS_KSIZE: int = 11
@@ -275,10 +283,10 @@ if __name__ == "__main__":
         bn_momentum=CONF.BATCH_NORM,
         leaky_relu_slope=CONF.LEAKY_RELU_SLOPE,
         dropout_drop_p=CONF.DROPOUT,
-        enable_frame_head=CONF.ENABLE_FRAME_HEAD).to(CONF.DEVICE)
+        enable_offset_head=CONF.ENABLE_OFFSET_HEAD).to(CONF.DEVICE)
     if CONF.SNAPSHOT_INPATH is not None:
         load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=False,
-                   strict=not CONF.ENABLE_FRAME_HEAD)
+                   strict=not CONF.ENABLE_OFFSET_HEAD)
     model_saver = ModelSaver(
         model, MODEL_SNAPSHOT_OUTDIR,
         log_fn=lambda msg: txt_logger.loj("SAVED_MODEL", msg))
@@ -295,26 +303,51 @@ if __name__ == "__main__":
         [CONF.ONSET_POSITIVES_WEIGHT]).to(CONF.DEVICE)
     ons_loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=ons_pos_weights)
     vel_loss_fn = MaskedBCEWithLogitsLoss()
-    frm_loss_fn = None
-    if CONF.ENABLE_FRAME_HEAD:
-        frm_pos_weights = torch.FloatTensor(
-            [CONF.FRAME_POSITIVES_WEIGHT]).to(CONF.DEVICE)
-        frm_loss_fn = torch.nn.BCEWithLogitsLoss(
-            pos_weight=frm_pos_weights)
 
     # optimizer
     if CONF.TRAINABLE_COMPONENTS == "all":
         trainable_params = model.parameters()
     elif CONF.TRAINABLE_COMPONENTS == "velocity":
         trainable_params = model.velocity_stage.parameters()
-    elif CONF.TRAINABLE_COMPONENTS == "frame":
-        if model.frame_stage is None:
-            raise ValueError("frame mode requires ENABLE_FRAME_HEAD=True")
-        trainable_params = model.frame_stage.parameters()
+    elif CONF.TRAINABLE_COMPONENTS == "offset":
+        if model.offset_stage is None:
+            raise ValueError("offset mode requires ENABLE_OFFSET_HEAD=True")
+        trainable_params = model.offset_stage.parameters()
     else:
-        raise ValueError("TRAINABLE_COMPONENTS must be all, velocity or frame")
+        raise ValueError(
+            "TRAINABLE_COMPONENTS must be all, velocity or offset")
     trainable_onsets = CONF.TRAINABLE_COMPONENTS == "all" and \
         CONF.TRAINABLE_ONSETS
+
+    def freeze_untrained_submodules():
+        """Hold every non-trained submodule in eval() with grads disabled.
+
+        Restricting the optimizer to one submodule freezes that submodule's
+        WEIGHTS, but BatchNorm running_mean/running_var are BUFFERS: they are
+        rewritten by every forward pass while the module is in train() mode,
+        regardless of the optimizer or torch.no_grad(). This backbone is full
+        of BatchNorm2d and also has Dropout, so training a head with the whole
+        model in train() mode both mutates the pretrained weights we intend to
+        keep and feeds the head dropout-noised features.
+
+        Measured on this model: 12 steps of frame-head training moved 261
+        backbone buffers (specnorm.bn.running_var by 8.8e-1), which is why the
+        exported onset output stopped matching the published checkpoint.
+        Verify with `python verify_frozen_backbone.py [--fixed]`.
+
+        Must be re-applied after every model.train(), since train() is
+        recursive and re-enables the submodules.
+        """
+        if CONF.TRAINABLE_COMPONENTS == "all":
+            return
+        keep = {"velocity": "velocity_stage",
+                "offset": "offset_stage"}[CONF.TRAINABLE_COMPONENTS]
+        for name, module in model.named_children():
+            if name == keep:
+                continue
+            module.eval()
+            for parameter in module.parameters():
+                parameter.requires_grad_(False)
 
     opt_hpars = {
         "lr_max": CONF.LR_MAX, "lr": CONF.LR_MAX,
@@ -413,6 +446,10 @@ if __name__ == "__main__":
     global_step = 1
     onsets_beg, onsets_end = maestro_train.ONSETS_RANGE
     frames_beg, frames_end = maestro_train.FRAMES_RANGE
+    # The model is in train() mode from construction (and load_model with
+    # eval_phase=False re-asserts it), so freeze BEFORE the first step or the
+    # backbone drifts until the first cross-validation pass.
+    freeze_untrained_submodules()
     for epoch in range(1, CONF.NUM_EPOCHS + 1):
         for i, (logmels, rolls, metas) in enumerate(train_dl):
             if CONF.MAX_STEPS is not None and global_step > CONF.MAX_STEPS:
@@ -479,6 +516,8 @@ if __name__ == "__main__":
                 #
                 torch.cuda.empty_cache()
                 model.train()
+                # train() is recursive, so it undoes the freeze every time.
+                freeze_untrained_submodules()
 
             # ##################################################################
             # # TRAINING
@@ -487,9 +526,17 @@ if __name__ == "__main__":
                 logmels = logmels.to(CONF.DEVICE)
                 rolls = rolls[:, :, 1:].to(CONF.DEVICE)
                 onsets = rolls[:, onsets_beg:onsets_end][:, key_beg:key_end]
-                if CONF.ENABLE_FRAME_HEAD:
+                if CONF.ENABLE_OFFSET_HEAD:
+                    # The sustain-extended roll IS the sounding mask, from which
+                    # the remaining-time targets are derived.
                     frames_tgt = rolls[:, frames_beg:frames_end][
                         :, key_beg:key_end].clip(0, 1)
+                    # Chunk-local remaining-sounding-time; cells whose note
+                    # runs past the chunk edge (or the cap) are censored and
+                    # only contribute a lower-bound hinge to the loss.
+                    off_tgt, off_exact, off_cens = remaining_time_targets(
+                        frames_tgt, SECS_PER_FRAME,
+                        cap_secs=CONF.OFFSET_CAP_SECS)
 
                 # ##############################################################
                 double_onsets = onsets.clone()
@@ -517,13 +564,15 @@ if __name__ == "__main__":
 
             vel_loss = CONF.VEL_LOSS_LAMBDA * vel_loss_fn(
                 velocities, onsets_norm, mask=onsets_clip)
-            loss = vel_loss if CONF.TRAINABLE_COMPONENTS != "frame" else 0
-            if CONF.ENABLE_FRAME_HEAD:
-                frames = outputs[2]
-                frm_loss = CONF.FRAME_LOSS_LAMBDA * frm_loss_fn(
-                    frames, frames_tgt)
-                if CONF.TRAINABLE_COMPONENTS in ("all", "frame"):
-                    loss += frm_loss
+            loss = (vel_loss
+                    if CONF.TRAINABLE_COMPONENTS != "offset"
+                    else 0)
+            if CONF.ENABLE_OFFSET_HEAD:
+                # Append-only output order guarantees the offset map is last.
+                off_loss = CONF.OFFSET_LOSS_LAMBDA * censored_offset_loss(
+                    outputs[-1], off_tgt, off_exact, off_cens)
+                if CONF.TRAINABLE_COMPONENTS in ("all", "offset"):
+                    loss += off_loss
             if trainable_onsets:
                 ons_loss = sum(ons_loss_fn(ons, onsets_clip)
                                for ons in onset_stages) / len(onset_stages)
@@ -540,8 +589,8 @@ if __name__ == "__main__":
             #
             if (global_step % CONF.TRAIN_LOG_EVERY) == 0:
                 losses = [vel_loss.item()]
-                if CONF.ENABLE_FRAME_HEAD:
-                    losses.append(frm_loss.item())
+                if CONF.ENABLE_OFFSET_HEAD:
+                    losses.append(off_loss.item())
                 if trainable_onsets:
                     losses.append(ons_loss.item())
                 txt_logger.loj("TRAIN",

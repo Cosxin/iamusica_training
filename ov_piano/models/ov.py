@@ -103,7 +103,7 @@ class OnsetsAndVelocities(torch.nn.Module):
     def __init__(self, in_chans, in_height, out_height, conv1x1head=(200, 200),
                  bn_momentum=0.1, leaky_relu_slope=0.1, dropout_drop_p=0.1,
                  init_fn=torch.nn.init.kaiming_normal_, se_init_bias=1.0,
-                 enable_frame_head=False):
+                 enable_offset_head=False):
         """
         """
         super().__init__()
@@ -156,16 +156,21 @@ class OnsetsAndVelocities(torch.nn.Module):
                     self.VSTAGE_CAM_DILATIONS, self.VSTAGE_CAM_PADDINGS,
                     bn_momentum, leaky_relu_slope, dropout_drop_p),
             SubSpectralNorm(1, out_height, out_height, bn_momentum))
-        self.frame_stage = None
-        if enable_frame_head:
-            self.frame_stage = torch.nn.Sequential(
-                self.get_cam_stage(
-                    vel_in_chans, out_height, conv1x1head,
-                    self.VSTAGE_NUM_CAMS, self.VSTAGE_CAM_HDC_CHANS,
-                    self.VSTAGE_CAM_SE_BOTTLENECK, self.VSTAGE_CAM_KSIZES,
-                    self.VSTAGE_CAM_DILATIONS, self.VSTAGE_CAM_PADDINGS,
-                    bn_momentum, leaky_relu_slope, dropout_drop_p),
-                SubSpectralNorm(1, out_height, out_height, bn_momentum))
+        # Sounding-off regression head: per key and frame, predicts
+        # log1p(seconds until the note stops SOUNDING), i.e. until
+        # max(key_off, pedal_release). Its loss directly targets the offset
+        # time being scored, and a duration larger than any streaming lookahead
+        # is just a larger regressed value rather than an invisible event.
+        # Deliberately NO SubSpectralNorm at the end: normalizing a regression
+        # output would destroy its scale.
+        self.offset_stage = None
+        if enable_offset_head:
+            self.offset_stage = self.get_cam_stage(
+                vel_in_chans, out_height, conv1x1head,
+                self.VSTAGE_NUM_CAMS, self.VSTAGE_CAM_HDC_CHANS,
+                self.VSTAGE_CAM_SE_BOTTLENECK, self.VSTAGE_CAM_KSIZES,
+                self.VSTAGE_CAM_DILATIONS, self.VSTAGE_CAM_PADDINGS,
+                bn_momentum, leaky_relu_slope, dropout_drop_p)
 
         # initialize parameters
         if init_fn is not None:
@@ -194,7 +199,10 @@ class OnsetsAndVelocities(torch.nn.Module):
           shape ``(b, stem_chans, keys, t-1)`` and ``x_stages`` is a list with
           one onset prediction per stage, each of shape ``(b, keys, t-1)``.
         """
-        xdiff = x.diff(dim=-1)  # (b, melbins, t-1)
+        # Numerically identical to x.diff(dim=-1), but exportable: aten::diff
+        # has no ONNX lowering at opset 17 on either torch 2.2 or 2.13, whereas
+        # this lowers to a plain Sub of two slices.
+        xdiff = x[..., 1:] - x[..., :-1]  # (b, melbins, t-1)
         # x+xdiff has shape (b, 2, melbins, t-1)
         x = torch.stack([x[:, :, 1:], xdiff]).permute(1, 0, 2, 3)
         x = self.specnorm(x)
@@ -214,8 +222,8 @@ class OnsetsAndVelocities(torch.nn.Module):
     def forward(self, x, trainable_onsets=True):
         """
         :param x: Logmel batch of shape ``(b, melbins, t)``
-        :returns: ``(x_stages, velocities)`` or, when the optional frame head
-          is enabled, ``(x_stages, velocities, frames)``.
+        :returns: ``(x_stages, velocities)`` or, when the optional sounding-off
+          head is enabled, ``(x_stages, velocities, offsets)``.
           a description of ``x_stages``. The ``velocities`` tensor has shape
           ``(b, 1, keys, t-1)``, and is the result of processing ``stem_out``
           concatenated with the last ``x_stage`` output.
@@ -230,7 +238,9 @@ class OnsetsAndVelocities(torch.nn.Module):
                                      dim=1)
         #
         velocities = self.velocity_stage(stem_out).squeeze(1)
-        if self.frame_stage is not None:
-            frames = self.frame_stage(stem_out).squeeze(1)
-            return x_stages, velocities, frames
-        return x_stages, velocities
+        # Output order is stable and append-only:
+        # (x_stages, velocities[, offsets]).
+        outputs = [x_stages, velocities]
+        if self.offset_stage is not None:
+            outputs.append(self.offset_stage(stem_out).squeeze(1))
+        return tuple(outputs)

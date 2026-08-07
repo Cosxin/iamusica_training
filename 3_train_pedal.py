@@ -98,7 +98,7 @@ if __name__ == "__main__":
         dataset, batch_size=conf.TRAIN_BS, shuffle=True,
         num_workers=conf.DATALOADER_WORKERS, pin_memory=True)
 
-    base = OnsetsAndVelocities(2, mel_bins, 88, enable_frame_head=True)
+    base = OnsetsAndVelocities(2, mel_bins, 88)
     load_model(base, conf.BASE_SNAPSHOT, eval_phase=True, strict=True,
                to_cpu=conf.DEVICE == "cpu")
     model = FrozenPedalModel(

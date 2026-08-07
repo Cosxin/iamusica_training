@@ -39,7 +39,7 @@ from ov_piano.utils import IncrementalHDF5, load_model
 from ov_piano.data.maestro import MetaMAESTROv3
 from ov_piano.models.ov import OnsetsAndVelocities
 from ov_piano.inference import (
-    strided_inference, OnsetVelocityFrameDecoder, OnsetVelocityNmsDecoder)
+    strided_inference, OnsetVelocityNmsDecoder)
 from ov_piano.eval import GtLoaderMaestro
 
 
@@ -54,10 +54,6 @@ class ConfDef:
     RESULTS_JSON: Optional[str] = None
     LIMIT: int = 0
     THRESHOLD: float = 0.75
-    ENABLE_FRAME_HEAD: bool = True   # False for the shipped baseline (onset-only ckpt)
-    ONSET_ONLY: bool = False         # True: measure onset-retrigger only (no release/clean-segment)
-    FRAME_OFF_THRESHOLD: float = 0.5
-    RELEASE_DEBOUNCE_FRAMES: int = 3
     CONV1X1: tuple = (200, 200)
     LEAKY_RELU_SLOPE: float = 0.1
     INFERENCE_CHUNK_SIZE: float = 300.0
@@ -109,33 +105,24 @@ if __name__ == "__main__":
     print(f"[repeats] variant={CONF.DATASET_VARIANT} files={len(ds)} "
           f"tol={TOL}s gap_tol={GAP}s", flush=True)
 
-    onset_only = CONF.ONSET_ONLY or not CONF.ENABLE_FRAME_HEAD
+    # Repeated-note IOI is an ONSET-retrigger metric: it asks whether a
+    # same-pitch reattack is detected as a second note, which depends only on
+    # the onset head. Release information is not needed and is not used.
+    onset_only = True
     model = OnsetsAndVelocities(
         in_chans=2, in_height=MELS, out_height=num_keys,
         conv1x1head=tuple(CONF.CONV1X1), bn_momentum=0,
-        leaky_relu_slope=CONF.LEAKY_RELU_SLOPE, dropout_drop_p=0,
-        enable_frame_head=CONF.ENABLE_FRAME_HEAD).to(CONF.DEVICE)
+        leaky_relu_slope=CONF.LEAKY_RELU_SLOPE, dropout_drop_p=0).to(CONF.DEVICE)
     load_model(model, CONF.SNAPSHOT_INPATH, eval_phase=True, strict=True)
-    if onset_only:
-        decoder = OnsetVelocityNmsDecoder(
-            num_keys, nms_pool_ksize=3, gauss_conv_stddev=1,
-            gauss_conv_ksize=11, vel_pad_left=1, vel_pad_right=1)
-    else:
-        decoder = OnsetVelocityFrameDecoder(
-            num_keys, frame_off_threshold=CONF.FRAME_OFF_THRESHOLD,
-            release_debounce_frames=CONF.RELEASE_DEBOUNCE_FRAMES,
-            nms_pool_ksize=3, gauss_conv_stddev=1, gauss_conv_ksize=11,
-            vel_pad_left=1, vel_pad_right=1)
-    print(f"[repeats] mode={'ONSET_ONLY' if onset_only else 'FRAME'} "
-          f"frame_head={CONF.ENABLE_FRAME_HEAD}", flush=True)
+    decoder = OnsetVelocityNmsDecoder(
+        num_keys, nms_pool_ksize=3, gauss_conv_stddev=1,
+        gauss_conv_ksize=11, vel_pad_left=1, vel_pad_right=1)
+    print("[repeats] mode=ONSET_ONLY", flush=True)
 
     def infer(x):
         out = model(x)
         probs = F.pad(torch.sigmoid(out[0][-1]), (1, 0))
         vels = F.pad(torch.sigmoid(out[1]), (1, 0))
-        if len(out) > 2:
-            frames = F.pad(torch.sigmoid(out[2]), (1, 0))
-            return probs, vels, frames
         return probs, vels
 
     # per-bin counters
@@ -155,18 +142,11 @@ if __name__ == "__main__":
             tmel = torch.from_numpy(mel).to(CONF.DEVICE).unsqueeze(0)
             out = strided_inference(infer, tmel, CHUNK, OVL)
             del tmel
-        if onset_only:
-            notes = decoder(out[0], out[1], pthresh=CONF.THRESHOLD)
-            notes = notes[notes["prob"] >= CONF.THRESHOLD]
-            pr_on = notes["t_idx"].to_numpy() * SPF
-            pr_off = np.full(len(pr_on), np.inf)   # no release info
-            pr_key = (notes["key"].to_numpy() + key_beg).astype(int)
-        else:
-            notes = decoder(out[0], out[1], out[2], pthresh=CONF.THRESHOLD)
-            notes = notes[notes["prob"] >= CONF.THRESHOLD]
-            pr_on = notes["onset_idx"].to_numpy() * SPF
-            pr_off = notes["offset_idx"].to_numpy() * SPF
-            pr_key = (notes["key"].to_numpy() + key_beg).astype(int)
+        notes = decoder(out[0], out[1], pthresh=CONF.THRESHOLD)
+        notes = notes[notes["prob"] >= CONF.THRESHOLD]
+        pr_on = notes["t_idx"].to_numpy() * SPF
+        pr_off = np.full(len(pr_on), np.inf)   # no release info
+        pr_key = (notes["key"].to_numpy() + key_beg).astype(int)
 
         kev = gts(md)[0]
         gt_on = kev["onset"].to_numpy()
@@ -230,7 +210,7 @@ if __name__ == "__main__":
                          "onset_ok": int(onset_ok[b]),
                          "clean_ok": (None if onset_only else int(clean_ok[b]))})
     result = {"variant": CONF.DATASET_VARIANT, "n_files": len(ds),
-              "mode": "onset_only" if onset_only else "frame",
+              "mode": "onset_only",
               "threshold": CONF.THRESHOLD, "tol_secs": TOL, "gap_tol_secs": GAP,
               "total_pairs": int(tot.sum()),
               "onset_retrigger_recall_overall": float(onset_ok.sum() / tot.sum()),

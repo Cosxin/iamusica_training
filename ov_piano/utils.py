@@ -343,3 +343,73 @@ def init_weights(module, init_fn=torch.nn.init.kaiming_normal,
     else:
         if verbose:
             print("init_weights: ignored module:", module.__class__.__name__)
+
+
+# ##############################################################################
+# # SOUNDING-OFF REGRESSION TARGETS
+# ##############################################################################
+def remaining_time_targets(frames, secs_per_frame, cap_secs=8.0):
+    """Per-cell time until the note stops sounding, with chunk censoring.
+
+    Training operates on fixed-length chunks, so a note that is still sounding
+    at the chunk edge has an UNKNOWN remaining time -- all the chunk proves is
+    a lower bound (the distance to the edge). Treating those cells as exact
+    targets would teach the head that every long note ends at the chunk
+    boundary. They are therefore flagged censored, and the loss must only
+    penalize predictions BELOW the bound (right-censored regression). The same
+    flag is applied beyond ``cap_secs``, which also neutralizes the
+    pedal-held-at-end-of-file case whose true remaining time is unbounded.
+
+    :param frames: binary (b, keys, t) sounding-state roll (sustain-extended
+      for sounding-off; a key-up roll would yield key-up regression instead).
+    :param secs_per_frame: roll quantization, e.g. 0.024.
+    :param cap_secs: targets are clamped here and marked censored beyond it.
+    :returns: ``(target_log1p, exact_mask, censored_mask)``, all (b, keys, t).
+      ``target_log1p`` is log1p(remaining seconds) -- for censored cells it
+      holds the log1p of the LOWER BOUND. Masks are disjoint; their union is
+      exactly the sounding cells.
+    """
+    binary = (frames > 0.5)
+    b, k, t = binary.shape
+    idx = torch.arange(t, device=frames.device)
+    # Index of the next non-sounding frame at or after each position; t where
+    # the run continues to the chunk edge (= censored).
+    zero_pos = torch.where(binary, torch.full_like(idx.expand(b, k, t), t),
+                           idx.expand(b, k, t))
+    next_zero = zero_pos.flip(-1).cummin(-1).values.flip(-1)
+    remaining = (next_zero - idx).clamp(min=0).float() * secs_per_frame
+
+    runs_to_edge = next_zero == t
+    over_cap = remaining > cap_secs
+    censored_mask = binary & (runs_to_edge | over_cap)
+    exact_mask = binary & ~censored_mask
+    target = torch.log1p(remaining.clamp(max=cap_secs))
+    return target, exact_mask, censored_mask
+
+
+def censored_offset_loss(pred, target_log1p, exact_mask, censored_mask,
+                         delta=1.0):
+    """Huber on exact cells; one-sided hinge-Huber on censored cells.
+
+    Censored cells only know "remaining >= bound", so the loss pushes the
+    prediction up to the bound and is silent above it. Returns a scalar; zero
+    when a chunk contains no sounding cells.
+    """
+    total = pred.new_zeros(())
+    count = 0
+    if exact_mask.any():
+        err = pred[exact_mask] - target_log1p[exact_mask]
+        total = total + torch.nn.functional.huber_loss(
+            pred[exact_mask], target_log1p[exact_mask],
+            delta=delta, reduction="sum")
+        count += err.numel()
+    if censored_mask.any():
+        shortfall = (target_log1p[censored_mask]
+                     - pred[censored_mask]).clamp(min=0.0)
+        total = total + torch.nn.functional.huber_loss(
+            shortfall, torch.zeros_like(shortfall),
+            delta=delta, reduction="sum")
+        count += shortfall.numel()
+    if count == 0:
+        return total
+    return total / count

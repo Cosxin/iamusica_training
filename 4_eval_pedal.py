@@ -265,7 +265,7 @@ if __name__ == "__main__":
             dropout=model_conf["DROPOUT"],
             slow_dilation=model_conf.get("SLOW_DILATION", 2))
     elif model_type == "frozen":
-        base = OnsetsAndVelocities(2, mel_bins, 88, enable_frame_head=True)
+        base = OnsetsAndVelocities(2, mel_bins, 88)
         model = FrozenPedalModel(
             base,
             model_conf["ADAPTER_CHANNELS"],

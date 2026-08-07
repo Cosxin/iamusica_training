@@ -6,7 +6,6 @@ import numpy as np
 import torch
 
 from ov_piano.models.ov import OnsetsAndVelocities
-from ov_piano.inference import OnsetVelocityFrameDecoder
 from ov_piano.utils import IncrementalHDF5
 
 
@@ -29,13 +28,6 @@ def _pair(folder, name, delta):
     return str(mel_path), str(roll_path)
 
 
-def test_frame_head_shapes():
-    model = OnsetsAndVelocities(
-        2, 16, 8, conv1x1head=(8, 8), enable_frame_head=True)
-    onsets, velocities, frames = model(torch.rand(2, 16, 20))
-    assert len(onsets) == 3
-    assert velocities.shape == frames.shape == (2, 8, 19)
-
 
 def test_merge_repeats_matching_rolls(tmp_path):
     merge_module = _load_merge_module()
@@ -55,37 +47,4 @@ def test_merge_repeats_matching_rolls(tmp_path):
         assert [mel["data"][0, i * 4] for i in range(3)] == [1, 2, 3]
 
 
-def test_frame_decoder_debounces_release_and_handles_reattack():
-    decoder = OnsetVelocityFrameDecoder(
-        1, nms_pool_ksize=3, frame_off_threshold=0.5,
-        release_debounce_frames=2, min_note_frames=2)
-    onsets = torch.zeros(1, 1, 14)
-    onsets[0, 0, 1] = 0.9
-    onsets[0, 0, 7] = 0.8
-    velocities = torch.full_like(onsets, 0.75)
-    frames = torch.zeros_like(onsets)
-    frames[0, 0, 1:5] = 0.9
-    frames[0, 0, 3] = 0.1  # one-frame flicker must not release
-    frames[0, 0, 7:11] = 0.9
 
-    notes = decoder(onsets, velocities, frames, pthresh=0.5)
-
-    assert notes[["onset_idx", "offset_idx"]].values.tolist() == [
-        [1, 5], [7, 11]]
-    assert notes["release_reason"].tolist() == ["frame", "frame"]
-
-
-def test_frame_decoder_closes_active_note_at_reattack():
-    decoder = OnsetVelocityFrameDecoder(
-        1, nms_pool_ksize=3, frame_off_threshold=0.5,
-        release_debounce_frames=2, min_note_frames=2)
-    onsets = torch.zeros(1, 1, 12)
-    onsets[0, 0, 1] = 0.9
-    onsets[0, 0, 6] = 0.8
-    velocities = torch.ones_like(onsets)
-    frames = torch.ones_like(onsets)
-
-    notes = decoder(onsets, velocities, frames, pthresh=0.5)
-
-    assert notes.iloc[0]["offset_idx"] == 6
-    assert notes.iloc[0]["release_reason"] == "reattack"

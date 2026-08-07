@@ -29,7 +29,7 @@ def test_smoothed_targets_remain_probabilities():
 
 
 def test_frozen_pedal_model_shapes_and_gradients():
-    base = OnsetsAndVelocities(2, 229, 88, enable_frame_head=True)
+    base = OnsetsAndVelocities(2, 229, 88)
     model = FrozenPedalModel(base, adapter_channels=32, hidden_size=16,
                              gru_layers=1, dropout=0)
     model.train()
