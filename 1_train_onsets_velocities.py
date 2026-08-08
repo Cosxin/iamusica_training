@@ -154,6 +154,10 @@ class ConfDef:
     TRAINABLE_COMPONENTS: str = "all"
     # Sounding-off regression head (log1p seconds until the note stops
     # sounding). Requires the sustain-extended roll; see remaining_time_targets.
+    # Onset target width in frames (24 ms each). 3 = the original recipe's
+    # forward widening; 1 = a single-frame target. See the widening block in
+    # the training loop and predictions P3/P4 in the research plan.
+    TARGET_WIDTH_FRAMES: int = 3
     ENABLE_OFFSET_HEAD: bool = False
     OFFSET_LOSS_LAMBDA: float = 1.0
     # Notes still sounding past the cap are marked CENSORED rather than given an
@@ -539,18 +543,32 @@ if __name__ == "__main__":
                         cap_secs=CONF.OFFSET_CAP_SECS)
 
                 # ##############################################################
-                double_onsets = onsets.clone()
-                torch.maximum(onsets[..., :-1], onsets[..., 1:],
-                              out=double_onsets[..., 1:])
-                triple_onsets = double_onsets.clone()
-                torch.maximum(double_onsets[..., :-1], double_onsets[..., 1:],
-                              out=triple_onsets[..., 1:])
+                # ONSET TARGET WIDTH (the ablation knob).
                 #
-                onsets_clip = triple_onsets.clip(0, 1)
-                onsets_norm = triple_onsets / 127.0
+                # Each pass forward-dilates the onset target by one frame via a
+                # shifted maximum, so after (W-1) passes every onset spans W
+                # frames = W*24 ms. The original recipe hardcoded two passes
+                # (W=3, 72 ms); TARGET_WIDTH_FRAMES exposes it.
+                #
+                # Measured motivation (findings 05-07): the network does not
+                # reproduce this target but broadens it to ~88.6 ms at half
+                # maximum, and same-key pairs closer than ~125 ms fuse into one
+                # activation blob, costing 9.28 recall points at 75-125 ms IOI.
+                # Narrower targets should raise the resolution floor. Widening
+                # is presumably there for label-jitter tolerance, so W=1 may
+                # cost clean accuracy -- that trade is prediction P4 and must be
+                # reported either way.
+                widened = onsets
+                for _ in range(CONF.TARGET_WIDTH_FRAMES - 1):
+                    nxt = widened.clone()
+                    torch.maximum(widened[..., :-1], widened[..., 1:],
+                                  out=nxt[..., 1:])
+                    widened = nxt
+                #
+                onsets_clip = widened.clip(0, 1)
+                onsets_norm = widened / 127.0
                 del onsets
-                del double_onsets
-                del triple_onsets
+                del widened
                 # idx = 0; plt.clf(); plt.imshow(logmels[idx].cpu().numpy()[::-1]); plt.show()
                 # idx = 0; plt.clf(); plt.imshow(onsets[idx].cpu().numpy()[::-1]); plt.show()
                 # idx = 0; plt.clf(); plt.imshow(double_onsets[idx].cpu().numpy()[::-1]); plt.show()

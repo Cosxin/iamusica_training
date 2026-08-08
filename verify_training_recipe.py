@@ -196,6 +196,48 @@ def main() -> None:
         "censored loss punishes only underestimates",
         loss_high.item() == 0.0 and loss_low.item() > 0.0))
 
+    print("\n=== 6b. onset target width is exactly TARGET_WIDTH_FRAMES ===")
+    # The ablation is unfalsifiable unless each configured width really
+    # produces that many frames. This replicates the trainer's widening block
+    # verbatim on a hand-built roll: one isolated onset at frame 5, velocity
+    # 100, in a 20-frame window.
+    for width in (1, 2, 3, 4):
+        onsets = torch.zeros(1, 1, 20)
+        onsets[0, 0, 5] = 100.0
+        widened = onsets
+        for _ in range(width - 1):
+            nxt = widened.clone()
+            torch.maximum(widened[..., :-1], widened[..., 1:], out=nxt[..., 1:])
+            widened = nxt
+        active = (widened[0, 0] > 0).nonzero().flatten().tolist()
+        expected = list(range(5, 5 + width))
+        results.append(check(
+            f"width {width}: target spans exactly {width} frame(s)",
+            active == expected,
+            f"active frames {active}, expected {expected}"))
+    # Forward-only: the frame BEFORE the onset must never activate, or the
+    # model would be taught to fire early and every emitted timestamp shifts.
+    onsets = torch.zeros(1, 1, 20)
+    onsets[0, 0, 5] = 100.0
+    widened = onsets
+    for _ in range(2):
+        nxt = widened.clone()
+        torch.maximum(widened[..., :-1], widened[..., 1:], out=nxt[..., 1:])
+        widened = nxt
+    results.append(check("widening is forward-only (frame 4 stays zero)",
+                         float(widened[0, 0, 4]) == 0.0))
+    # Velocity must survive widening: onsets_norm divides by 127, so a
+    # clobbered magnitude would silently corrupt the velocity target.
+    results.append(check("velocity preserved across the widened span",
+                         all(float(widened[0, 0, f]) == 100.0
+                             for f in range(5, 8))))
+    # The trainer must actually read the knob rather than hardcode 3.
+    source = open("1_train_onsets_velocities.py", encoding="utf-8").read()
+    results.append(check(
+        "trainer reads CONF.TARGET_WIDTH_FRAMES in the widening loop",
+        "range(CONF.TARGET_WIDTH_FRAMES - 1)" in source
+        and "triple_onsets" not in source))
+
     print("\n=== 7. ONNX export runs and matches torch ===")
     import tempfile
     import os as _os
